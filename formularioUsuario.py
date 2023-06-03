@@ -16,7 +16,9 @@ import tkinter as tk
 from ttkthemes import ThemedTk
 from usuario import Usuario
 from formularioRH import FormularioRH
+from formularioPlan import FormularioPlan
 from formularioCuenta import FormularioCuenta
+from formularioCompras import FormularioCompras
 # sys.path.insert(0, r"C:/Users/mdari/Desktop/Ing_Prog/BackEnd/administrador.py")
 # sys.path.insert(0, r'C:/Users/mdari/Desktop/Ing_Prog/FrontEnd')
 # tkinter.font.families() para ver las fuentes
@@ -42,30 +44,33 @@ class FormularioUsuario:
         self.botonAtras.grid(row=0, column=0, sticky='w')
         #print(usuario)
         #print(type(usuario))
-        self.labelSuperior = label(self.ventana3, text=f"¡Hola, {self.usuario.nombre}!", font=(self.fuente, 30), fg=self.fuenteB, background=self.back)
+        tipo="administrador"
+        try:
+            tipo = self.usuario.cargo
+            #print(tipo)
+        except Exception:
+            tipo = "administrador"
+
+        self.labelSuperior = label(self.ventana3, text=f"¡Hola, {self.usuario.nombre}! ({tipo})", font=(self.fuente, 30), fg=self.fuenteB, background=self.back)
         self.labelSuperior.grid(row=0, column=1, padx=10, sticky='w')
 
         self.labelE = label(self.ventana3, font=(self.fuente, 30), fg=self.fuenteB, background=self.back)
         self.labelE.grid(row=1, column=0, pady=20, sticky='w')
 
-        tipo="administrador"
-        try:
-            tipo = self.usuario.cargo
-            print(tipo)
-        except Exception:
-            tipo = "administrador"
+        
 
         self.botonCuenta = bt(self.ventana3, text="CUENTA", font=(self.fuente, 20), bg=self.backB, fg=self.fuenteB, command=self.abrirFormularioCuenta)
         self.botonCuenta.grid(row=2, column=1, padx=10, pady=10, sticky='w')
-
+        #-Stock Producto
         if((tipo=="administrador")|(tipo=="vendedor")):
             self.botonVenta = bt(self.ventana3, text="VENTA         ", font=(self.fuente, 20), bg=self.backB, fg=self.fuenteB, command=self.abrirFormularioVenta)
             self.botonVenta.grid(row=3, column=1, padx=10, pady=10, sticky='w')
         #8 11 14 17
+        #+Stock Materia Prima
         if((tipo=="administrador")|(tipo=="repositor")):
-            self.botonRepo = bt(self.ventana3, text="COMPRAS        ", font=(self.fuente, 20), bg=self.backB, fg=self.fuenteB, command=self.abrirFormularioRepo)
+            self.botonRepo = bt(self.ventana3, text="COMPRAS        ", font=(self.fuente, 20), bg=self.backB, fg=self.fuenteB, command=self.abrirFormularioCompras)
             self.botonRepo.grid(row=4, column=1, padx=10, pady=10, sticky='w')
-
+        #-Stock Materia Prima +StockProducto
         if((tipo=="administrador")|(tipo=="productor")):
             self.botonPro = bt(self.ventana3, text="PRODUCCIÓN        ", font=(self.fuente, 20), bg=self.backB, fg=self.fuenteB, command=self.abrirFormularioPro)
             self.botonPro.grid(row=5, column=1, padx=10, pady=10, sticky='w')
@@ -73,6 +78,9 @@ class FormularioUsuario:
         if(tipo=="administrador"):
             self.botonRH = bt(self.ventana3, text="RECURSOS HUMANOS  ", font=(self.fuente, 20), bg=self.backB, fg=self.fuenteB, command=self.abrirFormularioRH)
             self.botonRH.grid(row=6, column=1, padx=10, pady=10, sticky='w')
+
+            self.botonPlan = bt(self.ventana3, text="PLANIFICACIÓN (MP/P)  ", font=(self.fuente, 20), bg=self.backB, fg=self.fuenteB, command=self.abrirFormularioPlan)
+            self.botonPlan.grid(row=7, column=1, padx=10, pady=10, sticky='w')
 
         self.ventana3.mainloop()
 
@@ -91,9 +99,9 @@ class FormularioUsuario:
         self.ventana3.withdraw()
         #aplicacion31 = FormularioVenta(self.ventana3, self.usuario)
 
-    def abrirFormularioRepo(self):
+    def abrirFormularioCompras(self):
         self.ventana3.withdraw()
-        #aplicacion32 = FormularioRepo(self.ventana3, self.usuario)
+        aplicacion32 = FormularioCompras(self.ventana3, self.usuario)
 
     def abrirFormularioPro(self):
         self.ventana3.withdraw()
@@ -102,6 +110,10 @@ class FormularioUsuario:
     def abrirFormularioRH(self):
         self.ventana3.withdraw()
         aplicacion34 = FormularioRH(self.ventana3, self.usuario)
+
+    def abrirFormularioPlan(self):
+        self.ventana3.withdraw()
+        aplicacion35 = FormularioPlan(self.ventana3, self.usuario)
 
         
         
