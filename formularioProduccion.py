@@ -1,3 +1,4 @@
+from pickle import FALSE
 import sys
 sys.path.append("C:/Users/mdari/Desktop/Ing_Prog/BackEnd/")
 from funciones import funciones as f
@@ -23,6 +24,7 @@ from usuario import Usuario
 from empleado import Empleado
 from proveedor import Proveedor
 from materiaprima import MateriaPrima
+from producto import Producto
 from remito import Remito
 # sys.path.insert(0, r"C:/Users/mdari/Desktop/Ing_Prog/BackEnd/administrador.py")
 # sys.path.insert(0, r'C:/Users/mdari/Desktop/Ing_Prog/FrontEnd')
@@ -51,7 +53,7 @@ Sizegrip: TSizegrip
 Treeview: Treeview
 """
 
-class FormularioCompras:
+class FormularioProduccion:
     def __init__(self, ventana, usuario):
         self.usuario = usuario
         self.tema = "blue"
@@ -60,21 +62,21 @@ class FormularioCompras:
         self.fuenteB = 'gray20'
         self.fuente =  'Franklin Gothic Demi Cond'
         self.ventana3 = ventana
-        self.ventana33 = ThemedTk() #tk.Tk()
-        self.ventana33.configure(bg=self.back)
-        self.ventana33.title("3.3 - COMPRAS")
-        self.ventana33.geometry("900x750")
-        self.ventana33.geometry("+10+20")
+        self.ventana34 = ThemedTk() #tk.Tk()
+        self.ventana34.configure(bg=self.back)
+        self.ventana34.title("3.4 - PRODUCCIÓN")
+        self.ventana34.geometry("900x750")
+        self.ventana34.geometry("+10+20")
 
         
         
-        self.labelSuperior = label(self.ventana33, text="COMPRAS", font=(self.fuente, 30), fg=self.fuenteB, background=self.back)
+        self.labelSuperior = label(self.ventana34, text="PRODUCCIÓN", font=(self.fuente, 30), fg=self.fuenteB, background=self.back)
         self.labelSuperior.grid(row=0, column=1, padx=10, sticky='w')
         
 
-        self.botonAtras = bt(self.ventana33, text="⬅️", font=(self.fuente, 20), bg=self.backB, fg=self.fuenteB, command=self.volverFormularioUsuario)
+        self.botonAtras = bt(self.ventana34, text="⬅️", font=(self.fuente, 20), bg=self.backB, fg=self.fuenteB, command=self.volverFormularioUsuario)
         self.botonAtras.grid(row=0, column=0, padx=1, pady=1, sticky='w')
-        self.cuaderno1 = ttk.Notebook(self.ventana33)
+        self.cuaderno1 = ttk.Notebook(self.ventana34)
 
         #print(self.ventana34.get_themes())
         self.style = ttk.Style(self.cuaderno1)
@@ -86,292 +88,162 @@ class FormularioCompras:
         #[ 'alt', 'scidpurple', 'scidpink', 
         #'default', 'scidblue', 'classic', 'xpnative', 
         #, 'scidgrey', 'scidsand', 'scidgreen', 'arc', 'vista', 'winnative']
-
-        self.registrarProveedor()
-        self.remito()
-        self.materiaPrimaSM()
+        self.produccion()
+        self.producto()
+        self.productoSM()
         self.cuaderno1.grid(column=1, row=1, padx=10, pady=10)
-        self.ventana33.mainloop()
+        self.ventana34.mainloop()
 
    
 
     def volverFormularioUsuario(self):
         self.ventana3.deiconify()
-        self.ventana33.destroy()
+        self.ventana34.destroy()
+    
+    def produccion(self):
+        #productos
+        # Combobox creation
+        # listaPro empieza siendo una lista de tuplas [("Chipa", ), ("Pan de queso", )]
+        listaPro = Producto.recuperarNombres()
+        # listaPro se convierte en una lista con únicamente los nombres contenidos en cada tupla ["Chipa", "Pan de queso"]
+        listaPro = [x[0] for x in listaPro]
+        listaPro.sort(key=lambda x: x[0])
 
-    def registrarProveedor(self):
-        
         self.pagina1 = ttk.Frame(self.cuaderno1)
         #900x750
         self.pagina1.config(width=800, height=750)
-        self.cuaderno1.add(self.pagina1, text="Registrar Proveedor")
-        
-        self.labelframe1 = labelF(self.pagina1, text="Registrar Proveedor", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
+        self.cuaderno1.add(self.pagina1, text="Producción")
+
+        self.labelframe1 = labelF(self.pagina1, text="Producción", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelframe1.grid(column=0, row=0, padx=5, pady=10)
 
-        #self.labelFecha = label(self.labelframe1, text='Fecha de contratación:', font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
-        #self.labelFecha.grid(column=0, row=0, padx=4, pady=4)
-        #self.entradaFecha = DateEntry(self.labelframe1, font=(self.fuente, 20), fg=self.fuenteB, width=15, background=self.backB, foreground='white', borderwidth=2)
-        #self.entradaFecha.grid(column=1, row=0, padx=4, pady=4)
+        self.labelPro = label(self.labelframe1, text="Producto:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
+        self.labelPro.grid(column=0, row=1, padx=4, pady=4)
 
-        self.labelDNI = label(self.labelframe1, text="DNI:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
-        self.labelDNI.grid(column=0, row=1, padx=4, pady=4)
-        self.entradaDNI = entry(self.labelframe1, font=(self.fuente, 20), fg=self.fuenteB)
-        self.entradaDNI.grid(column=1, row=1, padx=4, pady=4)
+        self.comboPro = ttk.Combobox(self.labelframe1, font=(self.fuente, 20), width = 15, values=listaPro)
+        # Adding combobox drop down list
+        self.comboPro.set(listaPro[0])
+        self.comboPro.grid(column = 1, row = 1)
+        self.comboPro.bind("<<ComboboxSelected>>", self.on_selectP)
 
-        self.labelCUIL = label(self.labelframe1, text="CUIL/CUIT:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
-        self.labelCUIL.grid(column=0, row=2, padx=4, pady=4)
-        self.entradaCUIL = entry(self.labelframe1, font=(self.fuente, 20), fg=self.fuenteB)
-        self.entradaCUIL.grid(column=1, row=2, padx=4, pady=4)
+        self.textPro = tk.StringVar()
+        descripP = Producto.obtenerArti("productos", "descripcionProducto", (listaPro[0], ), "Producto")
+        descripP = descripP[0]
+        #print(descripP[0])
+        self.textPro = descripP[0]
+        self.labelCant = label(self.labelframe1, text=f"Cantidad ({self.textPro}):", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
+        self.labelCant.grid(column=0, row=2, padx=4, pady=4)
 
-        self.labelNombre = label(self.labelframe1, text="Nombre:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
-        self.labelNombre.grid(column=0, row=3, padx=4, pady=4)
-        self.entradaNombre = entry(self.labelframe1, font=(self.fuente, 20), fg=self.fuenteB)
-        self.entradaNombre.grid(column=1, row=3, padx=4, pady=4)
+        self.entradaCant = entry(self.labelframe1, font=(self.fuente, 20), fg=self.fuenteB)
+        self.entradaCant.grid(column=1, row=2, padx=4, pady=4)
 
-        self.labelDomi = label(self.labelframe1, text="Domicilio:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
-        self.labelDomi.grid(column=0, row=4, padx=4, pady=4)
-        self.entradaDomi = entry(self.labelframe1, font=(self.fuente, 20), fg=self.fuenteB)
-        self.entradaDomi.grid(column=1, row=4, padx=4, pady=4)
-
-        self.labelTel = label(self.labelframe1, text="Teléfono:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
-        self.labelTel.grid(column=0, row=5, padx=4, pady=4)
-        self.entradaTel = entry(self.labelframe1, font=(self.fuente, 20), fg=self.fuenteB)
-        self.entradaTel.grid(column=1, row=5, padx=4, pady=4)
-
-        self.botonConfirmar = bt(self.labelframe1, text="Registrar", font=(self.fuente, 20), fg=self.fuenteB, background=self.backB, command=self.altaNuevoProveedor)
+        self.botonConfirmar = bt(self.labelframe1, text="Producir", font=(self.fuente, 20), fg=self.fuenteB, background=self.backB, command=self.cargaStockPro)
         self.botonConfirmar.grid(column=1, row=10, padx=4, pady=4)
+
+    def cargaStockPro(self):
+        # Actualizar el stock de productos
+        cantidad = f.ingNumPosi(self.entradaCant.get(), "La cantidad")
+
+        #si cantidad es mayor a 0 entonces hago todo lo de abajo
+       
+        if(type(cantidad) is not list):
         
+            nombre = self.comboPro.get()
+            producto1 = Producto.obtenerPro(nombre)
+            idPro = Producto.obtenerId((nombre, ))
+            listaMateriaPrima = producto1.recuperarMateriasPrimas(idPro)
 
-    def altaNuevoProveedor(self):
+            MPSuficiente=True
+            for datoMP in listaMateriaPrima:
+                #datoMP - (idMateriaPrima, CantidadMateriaPrima)
+                idMP = datoMP[0] 
+                cantidadMP = datoMP[1] #cantidad por la receta
+                stockMP = MateriaPrima.obtenerAtrib((idMP, ), ("idMateriaPrima", ), "materiasprimas", "stockMateriaPrima")
+                stockMP = stockMP[0][0]
+                cantidadMPTotal = cantidad * cantidadMP # cantidad ingresada x la cantidadMP necesaria
+                if(cantidadMPTotal>stockMP): #entonces no hay suficiente materia prima en stock para realizar la fabricación
+                    MPSuficiente=False
+                    break
 
-        dni = f.ingDNI_CUIL(self.entradaDNI.get(), 8, "DNI")
-        cuil = f.ingDNI_CUIL(self.entradaCUIL.get(), 11)
-        nombre = self.entradaNombre.get()
-        domi = self.entradaDomi.get()
-        tel = f.ingNum(self.entradaTel.get(), "El teléfono", 15)
+            #si tengo la materia prima suficiente (con respecto a la cantidad) entonces hago todo lo de abajo
+            if(MPSuficiente):
+                
+                for datoMP in listaMateriaPrima:
+                    #datoMP - (idMateriaPrima, CantidadMateriaPrima)
+                    idMP = datoMP[0]
+                    cantidadMP = datoMP[1] #cantidad por la receta
+                    stockMP = MateriaPrima.obtenerAtrib((idMP, ), ("idMateriaPrima", ), "materiasprimas", "stockMateriaPrima")
+                    stockMP = stockMP[0][0]
+                    cantidadMPTotal = cantidad * cantidadMP # cantidad ingresada x la cantidadMP necesaria
+                    nuevoStockMP = stockMP - cantidadMPTotal
+                    MateriaPrima.modificarArti("materiasprimas", "idMateriaPrima", nuevoStockMP, idMP, "stockMateriaPrima")
+                
+                stockActual = Producto.obtenerAtrib((idPro, ), ("idProducto", ), "productos", "stockProducto")
+                stockActual = stockActual[0][0]
+                #stockActual = bd.consulta(cone2, (idMateriaPrima, ), ("idMateriaPrima", ), "materiasprimas", "stockMateriaPrima")
+                #stockActual = stockActual[0][0]  # Obtener el stock actual
 
-        #fecha = datetime.strptime(self.entradaFecha.get(), '%m/%d/%y') #datetime.strptime("5-26-2023", '%m-%d-%Y')
-        #Esto es para verificar si el DNI ya existe en las tablas de Proveedores
-        idProveedor = Proveedor.obtenerId((dni,))
-        
-        dniCuilComparar = f.dniCuilComparar(dni, cuil)
-        entrysValidos = ((nombre!="")&(domi!="")&(dniCuilComparar)&(type(tel) is not list)&(idProveedor==-1))
-        if(entrysValidos):
-            #nombreProveedor, CUIL_CUIT, DNI, domicilioProveedor, telefonoProveedor
-            nuevoProveedor = Proveedor(nombre, cuil, dni, domi, int(tel))
-            mb.showinfo("¡Felicidades!", "Proveedor registrado")
+                nuevoStock = stockActual + cantidad
+
+                Producto.modificarArti("productos", "idProducto", nuevoStock, idPro, "stockProducto")
+                mb.showinfo("¡Felicidades!", "Producción cargada correctamente")
+            else:
+                mb.showerror("Error", "Materia prima insuficiente")
         else:
-            mensaje=""
-            #print(dni)
-            if(type(dni) is list):
-                mensaje += dni[0]
-            if(type(cuil) is list):
-                mensaje += "\n"+cuil[0]
-            if(nombre == ""):
-                mensaje += "\nEl nombre no puede estar vacío."
-            if(domi == ""):
-                mensaje += "\nEl domicilio no puede estar vacío."
-            if(type(tel) is list):
-                mensaje += "\n"+tel[0]
-            if(dniCuilComparar==False):
-                mensaje += "\nEl DNI y el CUIL/CUIT no coinciden."
-            if(idProveedor!=-1):
-                mensaje += "\nEl DNI ya existe en la base de datos."
-            #print(mensaje)
-            mb.showerror("Error", mensaje)
-        self.entradaDNI.delete(0, tk.END)
-        self.entradaCUIL.delete(0, tk.END)
-        self.entradaNombre.delete(0, tk.END)
-        self.entradaDomi.delete(0, tk.END)
-        self.entradaTel.delete(0, tk.END)
-
-    def remito(self):
-        self.pagina2 = ttk.Frame(self.cuaderno1)
-        #900x750
-        self.pagina2.config(width=800, height=750)
-        self.cuaderno1.add(self.pagina2, text="Cargar Remito")
-        
-        # idRemito:                 numeroRemito fechaEmisionRemito idProveedor 
-        # remito
-        self.labelframe2 = labelF(self.pagina2, text="Remito", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
-        self.labelframe2.grid(column=0, row=0, padx=5, pady=10)
-
-        self.labelNum = label(self.labelframe2, text="Número de remito:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
-        self.labelNum.grid(column=0, row=1, padx=4, pady=4)
-        self.entradaNum = entry(self.labelframe2, font=(self.fuente, 20), fg=self.fuenteB)
-        self.entradaNum.grid(column=1, row=1, padx=4, pady=4)
-
-        self.labelFechaEmi = label(self.labelframe2, text='Fecha de emisión:', font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
-        self.labelFechaEmi.grid(column=0, row=2, padx=4, pady=4)
-        self.entradaFechaEmi = DateEntry(self.labelframe2, font=(self.fuente, 20), fg=self.fuenteB, width=15, background=self.backB, foreground='white', borderwidth=2)
-        self.entradaFechaEmi.grid(column=1, row=2, padx=4, pady=4)
-
-        self.listaNom = Proveedor.recuperarNombres()
-        self.listaDNI = Proveedor.recuperarDNIs()
-
-        # Convierte las listas de tuplas en listas normales
-        self.listaNom = [x[0] for x in self.listaNom]
-        self.listaDNI = [x[0] for x in self.listaDNI]
-
-        # Empaquetar las dos listas utilizando zip y ordenarlas por el primer elemento de cada par (listaNom)
-        ordenado = sorted(zip(self.listaNom, self.listaDNI))
-
-        # Desempaquetar la lista ordenada en dos listas separadas
-        self.listaNom, self.listaDNI = map(list, zip(*ordenado))
-        
-        self.labelProve = label(self.labelframe2, text="Proveedor:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
-        self.labelProve.grid(column=0, row=3, padx=4, pady=4)
-
-        self.comboProv = ttk.Combobox(self.labelframe2, font=(self.fuente, 20), width = 15, values=self.listaNom)
-        # Adding combobox drop down list
-        self.comboProv.set(self.listaNom[0])
-        self.comboProv.grid(column = 1, row = 3)
-        self.comboProv.bind("<<ComboboxSelected>>", self.on_selectP)
-        
-        self.textProv = self.listaDNI[0]
-        self.labelProv = label(self.labelframe2, text=f"DNI: {self.textProv}", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
-        self.labelProv.grid(column=2, row=3, padx=4, pady=4)
-        # remito
-        # idDetalleRemitoProveedor: cantidad fechaEntregaProducto idRemito idMateriaPrima idTipoEstadoMateriaPrima
-        # idTipoEstadoMateriaPrima: descripcionEstadoMateriaPrima
-        # detalleRemito
-        self.listaDetalles = []
-        self.labelDetalle = label(self.labelframe2, text="Detalle", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
-        self.labelDetalle.grid(column=0, row=4, padx=4, pady=4, sticky='w')
-
-        listaMat = MateriaPrima.recuperarNombres()
-        listaMat = [x[0] for x in listaMat]
-         
-        descripMP = MateriaPrima.obtenerArti("materiasprimas", "descripcionMateriaPrima", (listaMat[0], ), "MateriaPrima")
-        descripMP = descripMP[0]
-        self.textMat = descripMP[0]
-        self.labelMat = label(self.labelframe2, text=self.textMat, font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
-        self.labelMat.grid(column=1, row=5, padx=4, pady=4)
-
-        self.comboMat = ttk.Combobox(self.labelframe2, font=(self.fuente, 20), width = 15, values=listaMat)
-        # Adding combobox drop down list
-        self.comboMat.set(listaMat[0])
-        self.comboMat.grid(column = 0, row = 5)
-        self.comboMat.bind("<<ComboboxSelected>>", self.on_selectMP)
-
-        self.labelCant = label(self.labelframe2, text="Cantidad:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
-        self.labelCant.grid(column=0, row=6, padx=4, pady=4)
-        self.entradaCant = entry(self.labelframe2, font=(self.fuente, 20), fg=self.fuenteB)
-        self.entradaCant.grid(column=1, row=6, padx=4, pady=4)
-
-        self.labelFechaEnt = label(self.labelframe2, text='Fecha de entrega:', font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
-        self.labelFechaEnt.grid(column=0, row=7, padx=4, pady=4)
-        self.entradaFechaEnt = DateEntry(self.labelframe2, font=(self.fuente, 20), fg=self.fuenteB, width=15, background=self.backB, foreground='white', borderwidth=2)
-        self.entradaFechaEnt.grid(column=1, row=7, padx=4, pady=4)
-        # lista descripción
-        listaD = ["integro", "defectuoso"]
-        self.labelDescrip = label(self.labelframe2, text="Descripción de estado:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
-        self.labelDescrip.grid(column=0, row=8, padx=4, pady=4)
-        self.comboDescrip = ttk.Combobox(self.labelframe2, font=(self.fuente, 20), width = 15, values=listaD)
-        # Adding combobox drop down list
-        self.comboDescrip.grid(column = 1, row = 8)
-        self.comboDescrip.set(listaD[0])
-
-        self.botonAnnadirMat = bt(self.labelframe2, text="Añadir", font=(self.fuente, 20), fg=self.fuenteB, background=self.backB, command=self.annadirSTMat)
-        self.botonAnnadirMat.grid(column=2, row=8, padx=4, pady=4)
-
-        self.scrolledtextMat = st.ScrolledText(self.labelframe2, font=(self.fuente, 15), width=25, height=5)
-        self.scrolledtextMat.grid(column=0, row=9, padx=4, pady=4)
-        # detalleRemito
-
-        self.botonCargarR = bt(self.labelframe2, text="Cargar Remito", font=(self.fuente, 30), fg=self.fuenteB, background=self.backB, command=self.cargarRemito)
-        self.botonCargarR.grid(column=1, row=9, padx=4, pady=4)
-
-    def annadirSTMat(self):
-        idMP = MateriaPrima.obtenerId((self.comboMat.get(), ))
-        idTEMP = self.comboDescrip.current()+1
-        fechaE = datetime.strptime(self.entradaFechaEnt.get(), '%m/%d/%y')
-        cant = f.ingNumPosi(self.entradaCant.get(), "La cantidad")
-        if(type(cant) is not list):
-            # idDetalleRemitoProveedor: cantidad fechaEntregaProducto idRemito idMateriaPrima idTipoEstadoMateriaPrima
-            datos = (cant, fechaE, idMP, idTEMP)
-            # creamos una lista de tuplas con cada detalle que tendrá el remito para cuando lo creemos
-            self.listaDetalles.append(datos)
-            self.scrolledtextMat.insert(tk.END, f"{self.comboMat.get()} - {cant} - {self.entradaFechaEnt.get()} - {self.comboDescrip.get()}\n")
-        else:
-            mb.showerror("Error", cant[0])
-
-    def cargarRemito(self):
-        numRemito = f.ingNumPosi(self.entradaNum.get(), "El número de remito")
-        mensajeNR="El número de remito ya existe en la base de datos."
-        try:
-            idRemito = Remito.obtenerId((numRemito,))
-            if(idRemito==-1):
-                mensajeNR=""
-        except Exception:
-            mensajeNR=""
-
-        entryValido = (self.listaDetalles!=[])&(type(numRemito) is not list)&(mensajeNR=="")
-        if(entryValido):
-            print("")
-            fechaEmision = datetime.strptime(self.entradaFechaEmi.get(), '%m/%d/%y')
-            #self.textProv almacena el DNI del proveedor seleccionado
-            idProv = Proveedor.obtenerId((self.textProv, ))
-            remito = Remito(numRemito, fechaEmision, idProv)
-            idRemito = Remito.obtenerId((numRemito, ))
-            for detalle in self.listaDetalles:
-                #datos = (cant, fechaE, idMP, idTEMP)
-                remito.detalleRemito(detalle[0], detalle[1], idRemito, detalle[2], detalle[3])
-                #Cannot add or update a child row: a foreign key constraint fails 
-                #(`panaderia`.`detalleremitoproveedor`, CONSTRAINT `detalleremitoproveedor_ibfk_3` FOREIGN KEY 
-                #(`idTipoEstadoMateriaPrima`) REFERENCES `tipoestadomateriaprima` (`idTipoEstadoMateriaPrima`) ON DE)
-            mb.showinfo("¡Felicidades!", "Remito cargado correctamente")
-            self.listaDetalles.clear()
-            self.entradaNum.delete(0, tk.END)
-            self.scrolledtextMat.delete("1.0", tk.END)
-        else:
-            mensaje=""
-            if(type(numRemito) is list):
-                mensaje += f"{numRemito[0]}\n"
-            if(self.listaDetalles==[]):
-                mensaje += f"El detalle remito no puede estar vacío."
-            if(mensajeNR!=""):
-                mensaje += mensajeNR
-            mb.showerror("Error", mensaje)
-
-    def on_selectMP(self, event):
-        nombreMP = self.comboMat.get()
-        descripMP = MateriaPrima.obtenerArti("materiasprimas", "descripcionMateriaPrima", (nombreMP, ), "MateriaPrima")
-        descripMP = descripMP[0]
-        self.textMat = descripMP[0]
-        self.labelMat.config(text=self.textMat)
+            mb.showerror("Error", cantidad[0])
+        self.entradaCant.delete(0, tk.END)
 
     def on_selectP(self, event):
-        indice = self.comboProv.current()
-        
-        self.textProv = self.listaDNI[indice]
-        self.labelProv.config(text=f"DNI: {self.textProv}")
+        nombreP = self.comboPro.get()
+        descripP = Producto.obtenerArti("productos", "descripcionProducto", (nombreP, ), "Producto")
+        descripP = descripP[0]
+        self.textPro = descripP[0]
+        self.labelCant.config(text=f"Cantidad ({self.textPro}):")
 
-    #consulta(cone, dDatos, cadenaT, tabla, atributoS)
-    #select nombreMateriaPrima from materiasprimas where stockMinimoMateriaPrima<stockMateriaPrima
-    
-    def materiaPrimaSM(self):
-        # lista de materia prima con falta en el stock, con el nombre, descripcion, el stock minimo y su stock actual
-        listaMateriaSM = MateriaPrima.recuperarNombresStockMinimo()
-
+    def productoSM(self):
+        # lista de productos con falta en el stock, con el nombre, descripcion, el stock minimo y su stock actual
+        listaProductoSM = Producto.recuperarNombresStockMinimo()
+        listaProductoSM.sort(key=lambda x: x[0])
         self.pagina3 = ttk.Frame(self.cuaderno1)
         #900x750
         self.pagina3.config(width=800, height=750)
         self.cuaderno1.add(self.pagina3, text="Stock mínimo")
         
-        self.labelframe3 = labelF(self.pagina3, text="Lista de materia prima con stock faltante", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
+        self.labelframe3 = labelF(self.pagina3, text="Lista de productos con stock faltante", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelframe3.grid(column=0, row=0, padx=5, pady=10)
 
         self.labelSM = label(self.labelframe3, text="NOMBRE\t\tSTOCK MÍNIMO\tSTOCK ACTUAL", font=(self.fuente, 15), fg=self.fuenteB, background=self.back)
         self.labelSM.grid(column=0, row=1, padx=4, pady=4)
 
-        self.scrolledtextMatSM = st.ScrolledText(self.labelframe3, font=(self.fuente, 15), width=40, height=15)
-        self.scrolledtextMatSM.grid(column=0, row=2, padx=5, pady=10)
+        self.scrolledtextProSM = st.ScrolledText(self.labelframe3, font=(self.fuente, 15), width=40, height=15)
+        self.scrolledtextProSM.grid(column=0, row=2, padx=5, pady=10)
 
         #print(listaMateriaSM)
-        for materia in listaMateriaSM:
-            #print(materia)
-            #materia = (nombre, descripcion, stock minimo, stock actual)
-            self.scrolledtextMatSM.insert(tk.END, f"{materia[0]} ({materia[1]})\t\t  {materia[2]}\t\t{materia[3]}\n")
-        self.scrolledtextMatSM.configure(state='disabled')
+        for producto in listaProductoSM:
+            #producto = (nombre, descripcion, stock minimo, stock actual)
+            self.scrolledtextProSM.insert(tk.END, f"{producto[0]} ({producto[1]})\t\t  {producto[2]}\t\t{producto[3]}\n")
+        self.scrolledtextProSM.configure(state='disabled')
+
+    def producto(self):
+        # lista de productos, con el nombre, descripcion, el precio unitario y su stock actual
+        listaProductoN = Producto.recuperarNombresDesPUStock()
+        listaProductoN.sort(key=lambda x: x[0])
+        self.pagina4 = ttk.Frame(self.cuaderno1)
+        #900x750
+        self.pagina4.config(width=800, height=750)
+        self.cuaderno1.add(self.pagina4, text="Productos")
+        
+        self.labelframe4 = labelF(self.pagina4, text="Lista de productos", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
+        self.labelframe4.grid(column=0, row=0, padx=5, pady=10)
+
+        self.labelSM = label(self.labelframe4, text="NOMBRE\t\tPRECIO UNITARIO\tSTOCK ACTUAL", font=(self.fuente, 15), fg=self.fuenteB, background=self.back)
+        self.labelSM.grid(column=0, row=1, padx=4, pady=4)
+
+        self.scrolledtextProN = st.ScrolledText(self.labelframe4, font=(self.fuente, 15), width=40, height=15)
+        self.scrolledtextProN.grid(column=0, row=2, padx=5, pady=10)
+
+        #print(listaMateriaSM)
+        for producto in listaProductoN:
+            #producto = (nombre, descripcion, precioU, stock actual)
+            self.scrolledtextProN.insert(tk.END, f"{producto[0]} ({producto[1]})\t\t  {producto[2]}\t\t{producto[3]}\n")
+        self.scrolledtextProN.configure(state='disabled')

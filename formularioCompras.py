@@ -89,6 +89,7 @@ class FormularioCompras:
 
         self.registrarProveedor()
         self.remito()
+        self.materiaPrima()
         self.materiaPrimaSM()
         self.cuaderno1.grid(column=1, row=1, padx=10, pady=10)
         self.ventana33.mainloop()
@@ -265,7 +266,7 @@ class FormularioCompras:
         self.entradaFechaEnt = DateEntry(self.labelframe2, font=(self.fuente, 20), fg=self.fuenteB, width=15, background=self.backB, foreground='white', borderwidth=2)
         self.entradaFechaEnt.grid(column=1, row=7, padx=4, pady=4)
         # lista descripción
-        listaD = ["integro", "defectuoso"]
+        listaD = ["Integro", "Defectuoso"]
         self.labelDescrip = label(self.labelframe2, text="Descripción de estado:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelDescrip.grid(column=0, row=8, padx=4, pady=4)
         self.comboDescrip = ttk.Combobox(self.labelframe2, font=(self.fuente, 20), width = 15, values=listaD)
@@ -276,7 +277,7 @@ class FormularioCompras:
         self.botonAnnadirMat = bt(self.labelframe2, text="Añadir", font=(self.fuente, 20), fg=self.fuenteB, background=self.backB, command=self.annadirSTMat)
         self.botonAnnadirMat.grid(column=2, row=8, padx=4, pady=4)
 
-        self.scrolledtextMat = st.ScrolledText(self.labelframe2, font=(self.fuente, 15), width=25, height=5)
+        self.scrolledtextMat = st.ScrolledText(self.labelframe2, font=(self.fuente, 15), width=30, height=5)
         self.scrolledtextMat.grid(column=0, row=9, padx=4, pady=4)
         # detalleRemito
 
@@ -286,6 +287,7 @@ class FormularioCompras:
     def annadirSTMat(self):
         idMP = MateriaPrima.obtenerId((self.comboMat.get(), ))
         idTEMP = self.comboDescrip.current()+1
+        print(idTEMP)
         fechaE = datetime.strptime(self.entradaFechaEnt.get(), '%m/%d/%y')
         cant = f.ingNumPosi(self.entradaCant.get(), "La cantidad")
         if(type(cant) is not list):
@@ -354,7 +356,7 @@ class FormularioCompras:
     def materiaPrimaSM(self):
         # lista de materia prima con falta en el stock, con el nombre, descripcion, el stock minimo y su stock actual
         listaMateriaSM = MateriaPrima.recuperarNombresStockMinimo()
-
+        listaMateriaSM.sort(key=lambda x: x[0])
         self.pagina3 = ttk.Frame(self.cuaderno1)
         #900x750
         self.pagina3.config(width=800, height=750)
@@ -375,3 +377,28 @@ class FormularioCompras:
             #materia = (nombre, descripcion, stock minimo, stock actual)
             self.scrolledtextMatSM.insert(tk.END, f"{materia[0]} ({materia[1]})\t\t  {materia[2]}\t\t{materia[3]}\n")
         self.scrolledtextMatSM.configure(state='disabled')
+
+    def materiaPrima(self):
+        # lista de materia prima con el nombre, descripcion, el precio unitario y su stock actual
+        listaMateriaN = MateriaPrima.recuperarNombresDesPUStock()
+        listaMateriaN.sort(key=lambda x: x[0])
+        self.pagina4 = ttk.Frame(self.cuaderno1)
+        #900x750
+        self.pagina4.config(width=800, height=750)
+        self.cuaderno1.add(self.pagina4, text="Materia Prima")
+        
+        self.labelframe4 = labelF(self.pagina4, text="Lista de materias primas", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
+        self.labelframe4.grid(column=0, row=0, padx=5, pady=10)
+
+        self.labelSM = label(self.labelframe4, text="NOMBRE\t\tPRECIO UNITARIO\tSTOCK ACTUAL", font=(self.fuente, 15), fg=self.fuenteB, background=self.back)
+        self.labelSM.grid(column=0, row=1, padx=4, pady=4)
+
+        self.scrolledtextMatN = st.ScrolledText(self.labelframe4, font=(self.fuente, 15), width=40, height=15)
+        self.scrolledtextMatN.grid(column=0, row=2, padx=5, pady=10)
+
+        #print(listaMateriaSM)
+        for materia in listaMateriaN:
+            #print(materia)
+            #materia = (nombre, descripcion, stock minimo, stock actual)
+            self.scrolledtextMatN.insert(tk.END, f"{materia[0]} ({materia[1]})\t\t  {materia[2]}\t\t{materia[3]}\n")
+        self.scrolledtextMatN.configure(state='disabled')

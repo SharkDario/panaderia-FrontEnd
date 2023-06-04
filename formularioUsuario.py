@@ -19,6 +19,7 @@ from formularioRH import FormularioRH
 from formularioPlan import FormularioPlan
 from formularioCuenta import FormularioCuenta
 from formularioCompras import FormularioCompras
+from formularioProduccion import FormularioProduccion
 # sys.path.insert(0, r"C:/Users/mdari/Desktop/Ing_Prog/BackEnd/administrador.py")
 # sys.path.insert(0, r'C:/Users/mdari/Desktop/Ing_Prog/FrontEnd')
 # tkinter.font.families() para ver las fuentes
@@ -105,7 +106,7 @@ class FormularioUsuario:
 
     def abrirFormularioPro(self):
         self.ventana3.withdraw()
-        #aplicacion33 = FormularioPro(self.ventana3, self.usuario)
+        aplicacion33 = FormularioProduccion(self.ventana3, self.usuario)
 
     def abrirFormularioRH(self):
         self.ventana3.withdraw()
