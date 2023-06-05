@@ -125,7 +125,7 @@ class FormularioProduccion:
         self.comboPro.set(listaPro[0])
         self.comboPro.grid(column = 1, row = 1)
         self.comboPro.bind("<<ComboboxSelected>>", self.on_selectP)
-
+        
         self.textPro = tk.StringVar()
         descripP = Producto.obtenerArti("productos", "descripcionProducto", (listaPro[0], ), "Producto")
         descripP = descripP[0]
@@ -139,6 +139,13 @@ class FormularioProduccion:
 
         self.botonConfirmar = bt(self.labelframe1, text="Producir", font=(self.fuente, 20), fg=self.fuenteB, background=self.backB, command=self.cargaStockPro)
         self.botonConfirmar.grid(column=1, row=10, padx=4, pady=4)
+
+        self.labeltextProP = label(self.labelframe1, text=f"MATERIA PRIMA\t\t  CANTIDAD", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
+        self.labeltextProP.grid(column=0, row=11, padx=4, pady=4)
+
+        self.scrolledtextProP = st.ScrolledText(self.labelframe1, font=(self.fuente, 15), width=40, height=15)
+        self.scrolledtextProP.grid(column=0, row=12, padx=5, pady=10)
+        self.on_selectP()
 
     def cargaStockPro(self):
         # Actualizar el stock de productos
@@ -193,12 +200,22 @@ class FormularioProduccion:
             mb.showerror("Error", cantidad[0])
         self.entradaCant.delete(0, tk.END)
 
-    def on_selectP(self, event):
+    def on_selectP(self, event=None):
+        self.scrolledtextProP.delete('1.0', tk.END)
         nombreP = self.comboPro.get()
         descripP = Producto.obtenerArti("productos", "descripcionProducto", (nombreP, ), "Producto")
         descripP = descripP[0]
         self.textPro = descripP[0]
         self.labelCant.config(text=f"Cantidad ({self.textPro}):")
+
+        producto2 = Producto.obtenerPro(nombreP)
+        idPro2 = Producto.obtenerId((nombreP, ))
+        listaMateriaPrima2 = producto2.recuperarMateriasPrimas(idPro2)
+        for idMatCant in listaMateriaPrima2:
+            nombreDescrip = MateriaPrima.obtenerAtrib((idMatCant[0], ), ("idMateriaPrima", ), "materiasprimas", "nombreMateriaPrima, descripcionMateriaPrima")
+            nombreDescrip = nombreDescrip[0]
+            #nombre cantidad
+            self.scrolledtextProP.insert(tk.END, f"{nombreDescrip[0]} ({nombreDescrip[1]})\t\t\t\t{idMatCant[1]}\n")
 
     def productoSM(self):
         # lista de productos con falta en el stock, con el nombre, descripcion, el stock minimo y su stock actual
