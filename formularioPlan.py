@@ -441,8 +441,8 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
         nombre = self.comboProv3.get() # nombre de materia prima
         self.listaNom3.pop(indice) # se elimina de la lista de nombres el 
         self.comboProv3.config(values=self.listaNom3) # en el comboBox de la materia prima se pone la nueva lista sin ese nombre
-        idProv = MateriaPrima.obtenerId((nombre, )) # se obtiene el id de la materia prima a eliminar
-        MateriaPrima.bajaMateriaP(idProv) # se da de baja la materia prima
+        idMatP = MateriaPrima.obtenerId((nombre, )) # se obtiene el id de la materia prima a eliminar
+        MateriaPrima.bajaMateriaP(idMatP) # se da de baja la materia prima
         mb.showinfo("¡Felicidades!", "Materia prima dada de baja")
 
     def on_selectP3(self, event=None):
