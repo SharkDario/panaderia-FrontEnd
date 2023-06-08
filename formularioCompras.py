@@ -412,7 +412,7 @@ class FormularioCompras:
             self.scrolledtextMat.delete("1.0", tk.END)
         else:
             mensaje=""
-            if(type(numRemito) is list):
+            if(type(numRemito) is list): #si las variables son listas, entonces guardan un mensaje
                 mensaje += f"{numRemito[0]}\n"
             if(self.listaDetalles==[]):
                 mensaje += f"El detalle remito no puede estar vacío."
@@ -421,16 +421,19 @@ class FormularioCompras:
             mb.showerror("Error", mensaje)
 
     def on_selectMP(self, event):
-        nombreMP = self.comboMat.get()
+        nombreMP = self.comboMat.get() # se obtiene el nombre de la materia prima
+        # se obtiene la descripcion de la materia prima
         descripMP = MateriaPrima.obtenerArti("materiasprimas", "descripcionMateriaPrima", (nombreMP, ), "MateriaPrima")
         descripMP = descripMP[0]
         self.textMat = descripMP[0]
         self.labelMat.config(text=self.textMat)
 
     def on_selectP(self, event):
+        # se obtiene el indice del comboProv
         indice = self.comboProv.current()
-        
+        # se guarda en textProv el dni de ese indice
         self.textProv = self.listaDNI[indice]
+        # se inserta ese texto en labelProv
         self.labelProv.config(text=f"DNI: {self.textProv}")
 
     #consulta(cone, dDatos, cadenaT, tabla, atributoS)
@@ -450,21 +453,21 @@ class FormularioCompras:
 
         self.labelSM = label(self.labelframe3, text="NOMBRE\t\tSTOCK MÍNIMO\tSTOCK ACTUAL", font=(self.fuente, 15), fg=self.fuenteB, background=self.back)
         self.labelSM.grid(column=0, row=1, padx=4, pady=4)
-
+        # en scrolledtext se insertan los datos de las materias primas
         self.scrolledtextMatSM = st.ScrolledText(self.labelframe3, font=(self.fuente, 15), width=40, height=15)
         self.scrolledtextMatSM.grid(column=0, row=2, padx=5, pady=10)
 
         #print(listaMateriaSM)
         for materia in listaMateriaSM:
-            #print(materia)
+            #cada materia prima de la lista
             #materia = (nombre, descripcion, stock minimo, stock actual)
             self.scrolledtextMatSM.insert(tk.END, f"{materia[0]} ({materia[1]})\t\t  {materia[2]}\t\t{materia[3]}\n")
-        self.scrolledtextMatSM.configure(state='disabled')
+        self.scrolledtextMatSM.configure(state='disabled') # se desactiva la edicion
 
     def materiaPrima(self):
         # lista de materia prima con el nombre, descripcion, el precio unitario y su stock actual
         listaMateriaN = MateriaPrima.recuperarNombresDesPUStock()
-        listaMateriaN.sort(key=lambda x: x[0])
+        listaMateriaN.sort(key=lambda x: x[0]) # se ordena la lista de materia prima alfabeticamente
         self.pagina4 = ttk.Frame(self.cuaderno1)
         #900x750
         self.pagina4.config(width=800, height=750)
@@ -481,7 +484,7 @@ class FormularioCompras:
 
         #print(listaMateriaSM)
         for materia in listaMateriaN:
-            #print(materia)
+            #por cada materia en la lista de materias primas
             #materia = (nombre, descripcion, stock minimo, stock actual)
             self.scrolledtextMatN.insert(tk.END, f"{materia[0]} ({materia[1]})\t\t  {materia[2]}\t\t{materia[3]}\n")
         self.scrolledtextMatN.configure(state='disabled')
