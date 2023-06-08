@@ -151,15 +151,15 @@ class FormularioCuenta:
         entryValido = (type(var) is not list)&(var!="")
 
         if(entryValido):
-            if(bande):
+            if(bande): # se modifican atributos de persona (nombre, domicilio, telefono)
                 self.usuario.modificarPerso("usuarios", var, tipo)
-            else:
+            else: # se modifican atributos de usuario (usuario, clave)
                 self.usuario.modificarUser(var, tipo)
             self.insertarMensaje(True)
             mb.showinfo("¡Felicidades!", "Atributo modificado")
         else:
             mensaje=""
-            if(type(var) is list):
+            if(type(var) is list): #var = ["mensaje: sobre la validacion"]
                 mensaje += "\n"+var[0]
             if(var == ""):
                 mensaje += "\nEl valor no puede estar vacío."
