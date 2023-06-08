@@ -437,9 +437,9 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
         self.botonEliminar.grid(column=1, row=2, padx=4, pady=4)
 
     def bajaMateriaP(self):
-        indice = self.comboProv3.current()
-        nombre = self.comboProv3.get()
-        self.listaNom3.pop(indice)
+        indice = self.comboProv3.current() #se obtiene el indice del nombre de materia prima
+        nombre = self.comboProv3.get() # nombre de materia prima
+        self.listaNom3.pop(indice) # se elimina de la lista de nombres el 
         self.comboProv3.config(values=self.listaNom3)
         idProv = MateriaPrima.obtenerId((nombre, ))
         MateriaPrima.bajaMateriaP(idProv)
