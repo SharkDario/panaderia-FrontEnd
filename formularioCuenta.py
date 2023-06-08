@@ -51,9 +51,9 @@ Treeview: Treeview
 class FormularioCuenta:
     def __init__(self, ventana, usuario):
         self.usuario = usuario
-        self.tema = "blue"
+        self.tema = "itft1" #itft1 smog
         self.back = 'light blue'
-        self.backB = 'SteelBlue3'
+        self.backB = 'LightSalmon1'
         self.fuenteB = 'gray20'
         self.fuente =  'Franklin Gothic Demi Cond'
         self.ventana3 = ventana

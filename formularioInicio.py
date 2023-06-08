@@ -16,7 +16,8 @@ from tkinter import scrolledtext as st
 from ttkthemes import ThemedTk
 
 # tkinter.font.families() para ver las fuentes
-#DarkDark7
+#DarioDario7
+#pip install ttkthemes
 
 class FormularioInicio:
     def __init__(self):
@@ -32,11 +33,6 @@ class FormularioInicio:
         self.ventana1.geometry("+10+20")
         self.ventana1.title("1 - INICIO")
         #self.ventana1.iconbitmap('c:/Users/mdari/Desktop/Ing_Prog/FrontEnd/icono.ico')
-        #Metodologias agiles para la presentacion
-        #Marco teorico presentacion
-        #dentro de la metodologia agil, vamos a usar XP, que entregaron en los primeros 15 dias
-        #En el trello y en el git, la primera entrega, (hasta aca con todo esto)
-        #Y luego la segunda entrega
 
         style = ttk.Style(self.ventana1)
         style.theme_use(self.tema)

@@ -54,9 +54,9 @@ Treeview: Treeview
 class FormularioCompras:
     def __init__(self, ventana, usuario):
         self.usuario = usuario
-        self.tema = "blue"
+        self.tema = "itft1" #itft1 smog
         self.back = 'light blue'
-        self.backB = 'SteelBlue3'
+        self.backB = 'LightSalmon1'
         self.fuenteB = 'gray20'
         self.fuente =  'Franklin Gothic Demi Cond'
         self.ventana3 = ventana
@@ -88,6 +88,7 @@ class FormularioCompras:
         #, 'scidgrey', 'scidsand', 'scidgreen', 'arc', 'vista', 'winnative']
 
         self.registrarProveedor()
+        self.proveedorVerEliminar()
         self.remito()
         self.materiaPrima()
         self.materiaPrimaSM()
@@ -99,6 +100,68 @@ class FormularioCompras:
     def volverFormularioUsuario(self):
         self.ventana3.deiconify()
         self.ventana33.destroy()
+
+    def proveedorVerEliminar(self):
+        self.pagina5 = ttk.Frame(self.cuaderno1)
+        self.pagina5.config(width=800, height=750)
+        self.cuaderno1.add(self.pagina5, text="Ver Proveedor")
+
+        self.labelframe5 = labelF(self.pagina5, text="Información de Proveedor", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
+        self.labelframe5.grid(column=0, row=0, padx=5, pady=10)
+
+        self.listaNom2 = Proveedor.recuperarNombres()
+        self.listaDNI2 = Proveedor.recuperarDNIs()
+
+        # Convierte las listas de tuplas en listas normales
+        self.listaNom2 = [x[0] for x in self.listaNom2]
+        self.listaDNI2 = [x[0] for x in self.listaDNI2]
+
+        # Empaquetar las dos listas utilizando zip y ordenarlas por el primer elemento de cada par (listaNom)
+        ordenado = sorted(zip(self.listaNom2, self.listaDNI2))
+
+        # Desempaquetar la lista ordenada en dos listas separadas
+        self.listaNom2, self.listaDNI2 = map(list, zip(*ordenado))
+        
+        self.labelProve2 = label(self.labelframe5, text="Proveedor:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
+        self.labelProve2.grid(column=0, row=1, padx=4, pady=4)
+
+        self.comboProv2 = ttk.Combobox(self.labelframe5, font=(self.fuente, 20), width = 15, values=self.listaNom2)
+        # Adding combobox drop down list
+        self.comboProv2.set(self.listaNom2[0])
+        self.comboProv2.grid(column = 1, row = 1)
+        self.comboProv2.bind("<<ComboboxSelected>>", self.on_selectP2)
+        
+        self.textProv2 = self.listaDNI2[0]
+        self.labelProv2 = label(self.labelframe5, text=f"DNI: {self.textProv2}", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
+        self.labelProv2.grid(column=2, row=1, padx=4, pady=4)
+
+        self.scrolledtext2 = st.ScrolledText(self.labelframe5, font=(self.fuente, 20), width=20, height=10)
+        self.scrolledtext2.grid(column=0, row=2, padx=10, pady=10)
+        self.on_selectP2()
+
+        self.botonEliminar = bt(self.labelframe5, text="Dar de baja", font=(self.fuente, 20), fg=self.fuenteB, background=self.backB, command=self.bajaProveedor)
+        self.botonEliminar.grid(column=1, row=2, padx=4, pady=4)
+
+    def bajaProveedor(self):
+        indice = self.comboProv2.current()
+        dniEli = self.listaDNI2[indice]
+        self.listaNom2.pop(indice)
+        self.listaDNI2.remove(dniEli) 
+        self.comboProv2.config(values=self.listaNom2)
+        idProv = Proveedor.obtenerId((dniEli, ))
+        Proveedor.bajaProveedor(idProv)
+        mb.showinfo("¡Felicidades!", "Proveedor dado de baja")
+
+    def on_selectP2(self, event=None):
+        indice = self.comboProv2.current()
+        self.scrolledtext2.config(state="normal")
+        self.textProv2 = self.listaDNI2[indice]
+        self.labelProv2.config(text=f"DNI: {self.textProv2}")
+        prove1 = Proveedor.obtenerProveedor(int(self.textProv2))
+        mensaje = f"DNI: {prove1.DNI}\nCUIL/CUIT: {prove1.CUIL_CUIT}\nNombre: {prove1.nombre}\nDomicilio: {prove1.domicilio}\nTeléfono: {prove1.telefono}\n"
+        self.scrolledtext2.delete("1.0", tk.END)
+        self.scrolledtext2.insert(tk.END, mensaje)
+        self.scrolledtext2.config(state="disabled")
 
     def registrarProveedor(self):
         
@@ -220,7 +283,7 @@ class FormularioCompras:
 
         # Desempaquetar la lista ordenada en dos listas separadas
         self.listaNom, self.listaDNI = map(list, zip(*ordenado))
-        
+
         self.labelProve = label(self.labelframe2, text="Proveedor:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelProve.grid(column=0, row=3, padx=4, pady=4)
 
@@ -243,6 +306,7 @@ class FormularioCompras:
 
         listaMat = MateriaPrima.recuperarNombres()
         listaMat = [x[0] for x in listaMat]
+        listaMat = sorted(listaMat)
          
         descripMP = MateriaPrima.obtenerArti("materiasprimas", "descripcionMateriaPrima", (listaMat[0], ), "MateriaPrima")
         descripMP = descripMP[0]

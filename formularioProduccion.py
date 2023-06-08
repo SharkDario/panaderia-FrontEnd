@@ -56,9 +56,9 @@ Treeview: Treeview
 class FormularioProduccion:
     def __init__(self, ventana, usuario):
         self.usuario = usuario
-        self.tema = "blue"
+        self.tema = "itft1" #itft1 smog
         self.back = 'light blue'
-        self.backB = 'SteelBlue3'
+        self.backB = 'LightSalmon1'
         self.fuenteB = 'gray20'
         self.fuente =  'Franklin Gothic Demi Cond'
         self.ventana3 = ventana
@@ -187,8 +187,6 @@ class FormularioProduccion:
                 
                 stockActual = Producto.obtenerAtrib((idPro, ), ("idProducto", ), "productos", "stockProducto")
                 stockActual = stockActual[0][0]
-                #stockActual = bd.consulta(cone2, (idMateriaPrima, ), ("idMateriaPrima", ), "materiasprimas", "stockMateriaPrima")
-                #stockActual = stockActual[0][0]  # Obtener el stock actual
 
                 nuevoStock = stockActual + cantidad
 

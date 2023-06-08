@@ -51,13 +51,14 @@ Treeview: Treeview
 class FormularioRH:
     def __init__(self, ventana, usuario):
         self.usuario = usuario
-        self.tema = "blue"
+        self.tema = "itft1" #itft1 smog
         self.back = 'light blue'
-        self.backB = 'SteelBlue3'
+        self.backB = 'LightSalmon1'
         self.fuenteB = 'gray20'
         self.fuente =  'Franklin Gothic Demi Cond'
         self.ventana3 = ventana
         self.ventana34 = ThemedTk() #tk.Tk()
+        #self.ventana34.set_theme_advanced(self.tema)
         self.ventana34.configure(bg=self.back)
         self.ventana34.title("3.5 - RECURSOS HUMANOS")
         self.ventana34.geometry("900x750")
