@@ -78,23 +78,24 @@ class FormularioProduccion:
         self.botonAtras.grid(row=0, column=0, padx=1, pady=1, sticky='w')
         self.cuaderno1 = ttk.Notebook(self.ventana34)
 
-        #print(self.ventana34.get_themes())
+        #estilo del cuaderno
         self.style = ttk.Style(self.cuaderno1)
         self.style.theme_use(self.tema)
         
         # produccion() es para ingresar la cantidad de productos y sumarlos al stock
         self.produccion()
-        # 
+        # visualizar la lista de productos
         self.producto()
+        # visualizar la lista de productos con stock faltante
         self.productoSM()
         self.cuaderno1.grid(column=1, row=1, padx=10, pady=10)
-        self.ventana34.mainloop()
+        self.ventana34.mainloop() #abre la ventana
 
    
 
     def volverFormularioUsuario(self):
-        self.ventana3.deiconify()
-        self.ventana34.destroy()
+        self.ventana3.deiconify() #se muestra la ventana3
+        self.ventana34.destroy() #se cierra la ventana34
     
     def produccion(self):
         #productos
@@ -103,36 +104,39 @@ class FormularioProduccion:
         listaPro = Producto.recuperarNombres()
         # listaPro se convierte en una lista con únicamente los nombres contenidos en cada tupla ["Chipa", "Pan de queso"]
         listaPro = [x[0] for x in listaPro]
+        # se ordena la listaPro alfabeticamiento segun el nombre del producto
         listaPro.sort(key=lambda x: x[0])
 
         self.pagina1 = ttk.Frame(self.cuaderno1)
         #900x750
         self.pagina1.config(width=800, height=750)
         self.cuaderno1.add(self.pagina1, text="Producción")
-
+        # labelframe de la produccion
         self.labelframe1 = labelF(self.pagina1, text="Producción", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelframe1.grid(column=0, row=0, padx=5, pady=10)
-
+        # label y combobox del producto
         self.labelPro = label(self.labelframe1, text="Producto:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelPro.grid(column=0, row=1, padx=4, pady=4)
-
+        # el combo guarda la lista de productos
         self.comboPro = ttk.Combobox(self.labelframe1, font=(self.fuente, 20), width = 15, values=listaPro)
         # Adding combobox drop down list
         self.comboPro.set(listaPro[0])
         self.comboPro.grid(column = 1, row = 1)
-        self.comboPro.bind("<<ComboboxSelected>>", self.on_selectP)
+        self.comboPro.bind("<<ComboboxSelected>>", self.on_selectP) #cada vez q se selecciona se activa la funcion on_selectP
         
         self.textPro = tk.StringVar()
+        # se obtiene la descripcion del producto
         descripP = Producto.obtenerArti("productos", "descripcionProducto", (listaPro[0], ), "Producto")
+        # descripP es una tupla con un valor, se convierte en un solo valor
         descripP = descripP[0]
-        #print(descripP[0])
-        self.textPro = descripP[0]
+        # en textPro se guarda la descripcion
+        self.textPro = descripP[0] # en el label de cantidad se escribira Cantidad kg por ejemplo
+        # label y entrada de la cantidad de materia prima
         self.labelCant = label(self.labelframe1, text=f"Cantidad ({self.textPro}):", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelCant.grid(column=0, row=2, padx=4, pady=4)
-
         self.entradaCant = entry(self.labelframe1, font=(self.fuente, 20), fg=self.fuenteB)
         self.entradaCant.grid(column=1, row=2, padx=4, pady=4)
-
+        # 
         self.botonConfirmar = bt(self.labelframe1, text="Producir", font=(self.fuente, 20), fg=self.fuenteB, background=self.backB, command=self.cargaStockPro)
         self.botonConfirmar.grid(column=1, row=10, padx=4, pady=4)
 
