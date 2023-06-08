@@ -209,18 +209,21 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
         self.labelStockM2.grid(column=0, row=4, padx=4, pady=4)
         self.entradaStockM2 = entry(self.labelframe2, font=(self.fuente, 20), fg=self.fuenteB)
         self.entradaStockM2.grid(column=1, row=4, padx=4, pady=4)
-
+        # se acciona el metodo altaNuevoProducto
         self.botonConfirmar2 = bt(self.labelframe2, text="Registrar", font=(self.fuente, 20), fg=self.fuenteB, background=self.backB, command=self.altaNuevoProducto)
         self.botonConfirmar2.grid(column=1, row=10, padx=4, pady=4)
         
 
     def altaNuevoProducto(self):
+        # se obtiene el id del producto
         idProducto = Producto.obtenerId((self.entradaNombre2.get(), ))
+        # se valida que el nombre sea nuevo
         nombre = f.ingNombreMatPro(self.entradaNombre2.get(), idProducto, "del producto")
         descrip = self.entradaDescrip2.get()
+        # se validan el precio y stock minimo para que sean positivos
         precioU = f.ingNumPosi(self.entradaPU2.get(), "El precio unitario")
         stockM = f.ingNumPosi(self.entradaStockM2.get(), "El stock mínimo")
-        
+        #aqui se juntan todos los valores de verdad
         entrysValidos = ((nombre!="")&(descrip!="")&(type(precioU) is not list)&(type(stockM) is not list)&(type(nombre) is not list))
         if(entrysValidos):
             #Al dar de alta un nuevo producto su stock es 0
@@ -233,7 +236,7 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
                 mensaje += "\nEl nombre no puede estar vacío."
             if(descrip == ""):
                 mensaje += "\nLa descripción no puede estar vacía."
-            if(type(precioU) is list):
+            if(type(precioU) is list):  # Cuando alguna de las variables se ha ingresado un valor incorrecto devuelve una lista con el mensaje de error
                 mensaje += "\n"+precioU[0]
             if(type(stockM) is list):
                 mensaje += "\n"+stockM[0]
@@ -241,12 +244,13 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
                 mensaje += "\n"+nombre[0]
             #print(mensaje)
             mb.showerror("Error", mensaje)
+        # Se eliminan los valores dentro de las entradas
         self.entradaDescrip2.delete(0, tk.END)
         self.entradaPU2.delete(0, tk.END)
         self.entradaNombre2.delete(0, tk.END)
         self.entradaStockM2.delete(0, tk.END)
     
-
+    # especificar que materias primas utiliza un producto
     def fabricacion(self):
         self.pagina3 = ttk.Frame(self.cuaderno1)
         #900x750
@@ -264,7 +268,7 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
         # listaPro se convierte en una lista con únicamente los nombres contenidos en cada tupla ["Chipa", "Pan de queso"]
         listaPro = [x[0] for x in listaPro]
         listaPro = sorted(listaPro)
-
+        # el comboBox guardara los valores de la listaPro
         self.comboPro = ttk.Combobox(self.labelframe3, font=(self.fuente, 20), width = 15, values=listaPro)
         # Adding combobox drop down list
         self.comboPro.set(listaPro[0])
@@ -272,6 +276,7 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
         self.comboPro.bind("<<ComboboxSelected>>", self.on_selectP)
 
         self.textPro = tk.StringVar()
+        # se obtiene la descripcion del producto mediante el metodo obtenerArti
         descripP = Producto.obtenerArti("productos", "descripcionProducto", (listaPro[0], ), "Producto")
         descripP = descripP[0]
         #print(descripP[0])
@@ -279,17 +284,20 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
         self.labelPro = label(self.labelframe3, text=self.textPro, font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelPro.grid(column=1, row=1, padx=4, pady=4)
 
-
+        # se recuperan los nombres de las materias primas
         listaMat = MateriaPrima.recuperarNombres()
+        # se convierte la lista de tuplas, en una lista normal
         listaMat = [x[0] for x in listaMat]
+        # se ordena la lista alfabeticamente
         listaMat = sorted(listaMat)
          
+        #se obtiene la descripcion de la materia prima mediante obtenerArti
         descripMP = MateriaPrima.obtenerArti("materiasprimas", "descripcionMateriaPrima", (listaMat[0], ), "MateriaPrima")
         descripMP = descripMP[0]
         self.textMat = descripMP[0]
         self.labelMat = label(self.labelframe3, text=self.textMat, font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelMat.grid(column=1, row=2, padx=4, pady=4)
-
+        # se guardan los valores de la listaMat en el comboMat
         self.comboMat = ttk.Combobox(self.labelframe3, font=(self.fuente, 20), width = 15, values=listaMat)
         # Adding combobox drop down list
         self.comboMat.set(listaMat[0])
@@ -300,17 +308,17 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
         self.labelCant.grid(column=0, row=3, padx=4, pady=4)
         self.entradaCant = entry(self.labelframe3, font=(self.fuente, 20), fg=self.fuenteB)
         self.entradaCant.grid(column=1, row=3, padx=4, pady=4)
-
+        #mediante este boton inicia el comando annadirMPaP
         self.botonConfirmar2 = bt(self.labelframe3, text="Añadir", font=(self.fuente, 20), fg=self.fuenteB, background=self.backB, command=self.annadirMPaP)
         self.botonConfirmar2.grid(column=1, row=10, padx=4, pady=4)
-
+    #accion que sucede cada vez que en el comboPro se selecciona un producto
     def on_selectP(self, event):
         nombreP = self.comboPro.get()
         descripP = Producto.obtenerArti("productos", "descripcionProducto", (nombreP, ), "Producto")
         descripP = descripP[0]
         self.textPro = descripP[0]
         self.labelPro.config(text=self.textPro)
-
+    #accion que sucede cada vez que en el comboMat se selecciona una materia prima
     def on_selectMP(self, event):
         nombreMP = self.comboMat.get()
         descripMP = MateriaPrima.obtenerArti("materiasprimas", "descripcionMateriaPrima", (nombreMP, ), "MateriaPrima")
