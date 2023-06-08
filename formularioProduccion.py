@@ -176,14 +176,14 @@ class FormularioProduccion:
                     stockMP = MateriaPrima.obtenerAtrib((idMP, ), ("idMateriaPrima", ), "materiasprimas", "stockMateriaPrima")
                     stockMP = stockMP[0][0] # la lista de tupla [(stockMP,)] se convierte en un valor stockMP
                     cantidadMPTotal = cantidad * cantidadMP # cantidad ingresada x la cantidadMP necesaria
-                    nuevoStockMP = stockMP - cantidadMPTotal
+                    nuevoStockMP = stockMP - cantidadMPTotal # se calcula el nuevo stock de la materia prima
+                    # se modifica el stock de la materia prima en la BD
                     MateriaPrima.modificarArti("materiasprimas", "idMateriaPrima", nuevoStockMP, idMP, "stockMateriaPrima")
-                
+                # se obtiene el stockActual del producto mediante el idPro
                 stockActual = Producto.obtenerAtrib((idPro, ), ("idProducto", ), "productos", "stockProducto")
-                stockActual = stockActual[0][0]
-
-                nuevoStock = stockActual + cantidad
-
+                stockActual = stockActual[0][0] # la lista de tupla [(stock,)] se convierte en un valor stock
+                nuevoStock = stockActual + cantidad # se calcula el nuevoStock
+                # se actualiza el nuevo stock del producto en la BD
                 Producto.modificarArti("productos", "idProducto", nuevoStock, idPro, "stockProducto")
                 mb.showinfo("¡Felicidades!", "Producción cargada correctamente")
             else:
@@ -194,16 +194,16 @@ class FormularioProduccion:
 
     def on_selectP(self, event=None):
         self.scrolledtextProP.delete('1.0', tk.END)
-        nombreP = self.comboPro.get()
-        descripP = Producto.obtenerArti("productos", "descripcionProducto", (nombreP, ), "Producto")
+        nombreP = self.comboPro.get() # se obtiene el nombre del producto
+        descripP = Producto.obtenerArti("productos", "descripcionProducto", (nombreP, ), "Producto") #se obtiene la descripcion del producto
         descripP = descripP[0]
         self.textPro = descripP[0]
-        self.labelCant.config(text=f"Cantidad ({self.textPro}):")
-
+        self.labelCant.config(text=f"Cantidad ({self.textPro}):") # se inserta la descripcion en el label de cantidad
+        # se obtiene el producto mediante el nombre
         producto2 = Producto.obtenerPro(nombreP)
-        idPro2 = Producto.obtenerId((nombreP, ))
-        listaMateriaPrima2 = producto2.recuperarMateriasPrimas(idPro2)
-        for idMatCant in listaMateriaPrima2:
+        idPro2 = Producto.obtenerId((nombreP, )) # se obtiene el id del producto mediante el nombre
+        listaMateriaPrima2 = producto2.recuperarMateriasPrimas(idPro2) # se recuperan todas las materias primas mediante el id producto
+        for idMatCant in listaMateriaPrima2: #idMatCant[0] - id materia prima   idMatCant[1] - cantidad
             nombreDescrip = MateriaPrima.obtenerAtrib((idMatCant[0], ), ("idMateriaPrima", ), "materiasprimas", "nombreMateriaPrima, descripcionMateriaPrima")
             nombreDescrip = nombreDescrip[0]
             #nombre cantidad
