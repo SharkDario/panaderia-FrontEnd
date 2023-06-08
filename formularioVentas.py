@@ -546,24 +546,25 @@ class FormularioVentas:
     def producto(self):
         # lista de productos, con el nombre, descripcion, el precio unitario y su stock actual
         listaProductoN = Producto.recuperarNombresDesPUStock()
+        # se ordenan los productos alfabeticamente
         listaProductoN.sort(key=lambda x: x[0])
         self.pagina4 = ttk.Frame(self.cuaderno1)
         #900x750
         self.pagina4.config(width=800, height=750)
-        self.cuaderno1.add(self.pagina4, text="Productos")
-        
+        self.cuaderno1.add(self.pagina4, text="Productos") #titulo del cuaderno
+        #titulo del frame
         self.labelframe4 = labelF(self.pagina4, text="Lista de productos", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelframe4.grid(column=0, row=0, padx=5, pady=10)
-
+        # NOMBRE - PRECIO UNITARIO - STOCK ACTUAL
         self.labelSM = label(self.labelframe4, text="NOMBRE\t\tPRECIO UNITARIO\tSTOCK ACTUAL", font=(self.fuente, 15), fg=self.fuenteB, background=self.back)
         self.labelSM.grid(column=0, row=1, padx=4, pady=4)
-
+        #scrolledtext donde se insertaran los datos de todos los productos de la tabla producto
         self.scrolledtextProN = st.ScrolledText(self.labelframe4, font=(self.fuente, 15), width=40, height=15)
         self.scrolledtextProN.grid(column=0, row=2, padx=5, pady=10)
-
-        #print(listaMateriaSM)
+        # se recorre cada producto de la lista de productos
         for producto in listaProductoN:
             #producto = (nombre, descripcion, precioU, stock actual)
+            # Se inserta en el scrolledtext cada dato del producto y se realiza un salto de linea para el siguiente
             self.scrolledtextProN.insert(tk.END, f"{producto[0]} ({producto[1]})\t\t  {producto[2]}\t\t{producto[3]}\n")
         self.scrolledtextProN.configure(state='disabled')
 
