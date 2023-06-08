@@ -188,9 +188,13 @@ class FormularioRH:
         entrysValidos = ((dniCuilNoLista)&(type(user) is not list)&(type(clave) is not list)&(nombre!="")&(domi!="")&(dniCuilComparar)&(type(claveVal) is not list)&(type(tel) is not list))
         if(entrysValidos):
             #DNI, CUIL_CUIT, nombre, domicilio, telefono, user, clave, idTipoEmpleado, fechaInicio,
-            nuevoEmple = Empleado(dni, cuil, nombre, domi, int(tel), user, clave, tipo) #fecha
+            # se crea un objeto de tipo Empleado que se guardara en la tabla usuarios en la base de datos
+            nuevoEmple = Empleado(dni, cuil, nombre, domi, int(tel), user, clave, tipo)
+            # se obtiene el id del administrador que contrata al empleado mediante el dni
             idAdmin = Administrador.obtenerId((self.usuario.DNI, ))
+            # se obtiene el id del empleado que se dio de alta anteriormente mediante el dni
             idEmple = Empleado.obtenerId((nuevoEmple.DNI, ))
+            # se instancia el metodo contratacion del objeto Administrador, para dar de alta una contratacion en la tabla contratacion en la BD
             self.usuario.contratacion(fecha, idAdmin, idEmple)
             mb.showinfo("¡Felicidades!", "Empleado registrado")
         else:
