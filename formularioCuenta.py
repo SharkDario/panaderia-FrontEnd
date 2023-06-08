@@ -77,13 +77,9 @@ class FormularioCuenta:
         self.style = ttk.Style(self.cuaderno1)
         self.style.theme_use(self.tema)
         
-        #SI: blue, smog, black, adapta
-        #EH: kroc, plastik, winxpblue, itft1, aquativo, clam
-        #NO: equilux, keramik, elegance, radiance, breeze, clearlooks, ubuntu, yaru, scidmint
-        #[ 'alt', 'scidpurple', 'scidpink', 
-        #'default', 'scidblue', 'classic', 'xpnative', 
-        #, 'scidgrey', 'scidsand', 'scidgreen', 'arc', 'vista', 'winnative']
+        #se ve el perfil de la cuenta
         self.verPerfil()
+        # se puede modificar atributos de la cuenta
         self.modificarPerfil()
         
         self.cuaderno1.grid(column=1, row=1, padx=10, pady=10)
@@ -92,14 +88,14 @@ class FormularioCuenta:
    
 
     def volverFormularioUsuario(self):
-        self.ventana3.deiconify()
-        self.ventana30.destroy()
+        self.ventana3.deiconify() # vuelve a aparecer la ventana3
+        self.ventana30.destroy() # se destruye la ventana30
 
     def modificarPerfil(self):
-        
+        # 
         self.pagina1 = ttk.Frame(self.cuaderno1)
         self.cuaderno1.add(self.pagina1, text="Modificar perfil")
-        
+        # labelframe de modificar perfil
         self.labelframe1 = labelF(self.pagina1, text="Modificar perfil", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelframe1.grid(column=0, row=0, padx=5, pady=10)
         
@@ -108,12 +104,12 @@ class FormularioCuenta:
         # Combobox creation
         self.comboTipo = ttk.Combobox(self.labelframe1, font=(self.fuente, 20), width = 15)
         # Adding combobox drop down list
-        self.comboTipo['values'] = ('Nombre', 'Domicilio', 'Teléfono', 'Usuario', 'Contraseña')
-        self.comboTipo.set('Nombre')
+        self.comboTipo['values'] = ('Nombre', 'Domicilio', 'Teléfono', 'Usuario', 'Contraseña') #valores de comboTipo
+        self.comboTipo.set('Nombre') # se inserta el valor por defecto al entrar a la pagina del cuaderno
         
         self.comboTipo.grid(column = 1, row = 1)
-        self.comboTipo.bind("<<ComboboxSelected>>", self.on_select)
-
+        self.comboTipo.bind("<<ComboboxSelected>>", self.on_select) # cada vez que se selecciona comboTipo se activa on_select
+        #label y entrada del valor nuevo
         self.labelVal = label(self.labelframe1, text="Valor nuevo:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelVal.grid(column=0, row=2, padx=4, pady=4)
         self.entradaVal = entry(self.labelframe1, font=(self.fuente, 20), fg=self.fuenteB)
@@ -122,7 +118,7 @@ class FormularioCuenta:
         self.botonConfirmar = bt(self.labelframe1, text="Modificar", font=(self.fuente, 20), fg=self.fuenteB, background=self.backB, command=self.modificarAtributo)
         self.botonConfirmar.grid(column=1, row=3, padx=4, pady=4)
         
-    def on_select(self, event):
+    def on_select(self, event): # en el caso de que se selecciona Contraseña entonces se mostraran • al escribir
             if ((self.comboTipo.get()) == "Contraseña"):
                 self.entradaVal.delete(0, tk.END)
                 self.entradaVal.config(show="•")
@@ -135,27 +131,28 @@ class FormularioCuenta:
         tipo = self.comboTipo.get()
         if((tipo=="Nombre")|(tipo=="Domicilio")):
             tipo=tipo.lower()
-            var = self.entradaVal.get()
+            var = self.entradaVal.get() 
         elif(tipo=="Teléfono"):
             tipo="telefono"
-            var = f.ingNum(self.entradaVal.get(), "El teléfono", 15)
+            var = f.ingNum(self.entradaVal.get(), "El teléfono", 15) #se valida el numero de telefono
         elif(tipo=="Usuario"):
             bande=False #para modificar atributos de usuario
             tipo="usuario"
-            usuarios = Usuario.recuperarNombresUser()
-            var = f.ingUser(self.entradaVal.get(), usuarios)
+            usuarios = Usuario.recuperarNombresUser() # se recuperan los nombres de usuarios
+            var = f.ingUser(self.entradaVal.get(), usuarios) # se valida el usuario, si es que ya existe en la base de datos
         else:
             bande=False
-            tipo="clave"
+            tipo="clave" #se valida la clave q tenga 8 caracteres, un numero y una mayuscula
             var = f.ingClaveValida(self.entradaVal.get())
+        # se verifica el valor de verdad
         entryValido = (type(var) is not list)&(var!="")
 
-        if(entryValido):
+        if(entryValido): #si es verdadero
             if(bande): # se modifican atributos de persona (nombre, domicilio, telefono)
                 self.usuario.modificarPerso("usuarios", var, tipo)
             else: # se modifican atributos de usuario (usuario, clave)
                 self.usuario.modificarUser(var, tipo)
-            self.insertarMensaje(True)
+            self.insertarMensaje(True) # se inserta el mensaje, se pasa True, pq se cambio el valor de un atributo
             mb.showinfo("¡Felicidades!", "Atributo modificado")
         else:
             mensaje=""
@@ -165,31 +162,31 @@ class FormularioCuenta:
                 mensaje += "\nEl valor no puede estar vacío."
             #print(mensaje)
             mb.showerror("Error", mensaje)
-        self.entradaVal.delete(0, tk.END)
+        self.entradaVal.delete(0, tk.END) # se elimina lo escrito en la entrada
 
     def insertarMensaje(self, nuevo=None):
-        self.scrolledtext2.configure(state='normal')
+        self.scrolledtext2.configure(state='normal')  #se configura a normal para editar el scrolledtext2
         mensaje=""
         # Con "nuevo" se actualiza el perfil
         dni = self.usuario.DNI
-        if(type(self.usuario) is Administrador):
+        if(type(self.usuario) is Administrador): # si el usuario es un objeto Administrador
             if(nuevo==True):
-                self.usuario = Administrador.obtenerAdmi(dni)
-            idUser = Administrador.obtenerId((dni, ))
-        else:
-            if(nuevo==True):
-                self.usuario = Empleado.obtenerEmple([dni], dni)
-            idUser = Empleado.obtenerId((dni, ))
-            fechaIni = Empleado.verFechaContratacion((idUser, ))
-            locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
+                self.usuario = Administrador.obtenerAdmi(dni) # se obtiene el usuario actualizado si es que se paso True como argumento
+            idUser = Administrador.obtenerId((dni, )) # se obtiene su id mediante la clase Administrador
+        else: # en este caso el usuario es un objeto Empleado
+            if(nuevo==True): 
+                self.usuario = Empleado.obtenerEmple([dni], dni) # se obtiene el usuario actualizado si es que se paso True como argumento
+            idUser = Empleado.obtenerId((dni, )) # se obtiene su id mediante la clase Empleado
+            fechaIni = Empleado.verFechaContratacion((idUser, )) # se obtiene la fecha de contratacion del empleado
+            locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8') # se pone la fecha en la localidad en la que esta quien lo ejecuta
             fechaIni = fechaIni[0][0]
-            fechaIni = fechaIni.strftime('%d de %B de %Y')
-            mensaje=f"Cargo: {self.usuario.cargo}\nFecha de contratación: {fechaIni}"
-
+            fechaIni = fechaIni.strftime('%d de %B de %Y') # se transforma el datetime a cadena
+            mensaje=f"Cargo: {self.usuario.cargo}\nFecha de contratación: {fechaIni}" # se guarda el cargo y la fecha en un mensaje
+        #el mensaje completo de todos los datos del usuario
         mensaje = f"ID: {idUser}\nDNI: {self.usuario.DNI}\nCUIL/CUIT: {self.usuario.CUIL_CUIT}\nNombre: {self.usuario.nombre}\nDomicilio: {self.usuario.domicilio}\nTeléfono: {self.usuario.telefono}\nUsuario: {self.usuario.user}\n"+mensaje
         self.scrolledtext2.delete("1.0", tk.END)
-        self.scrolledtext2.insert(tk.END, mensaje)
-        self.scrolledtext2.configure(state='disabled')
+        self.scrolledtext2.insert(tk.END, mensaje) # se inserta el mensaje en el scrolledtext2 que aparece en perfil
+        self.scrolledtext2.configure(state='disabled') # se desactiva la edicion
 
     def verPerfil(self):
         self.pagina2 = ttk.Frame(self.cuaderno1)
@@ -197,15 +194,15 @@ class FormularioCuenta:
         
         self.labelframe2 = labelF(self.pagina2, text="Perfil", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelframe2.grid(column=0, row=0, padx=5, pady=10)
-
+        #aqui se insertan los datos del usuario
         self.scrolledtext2 = st.ScrolledText(self.labelframe2, font=(self.fuente, 20), width=35, height=10)
         self.scrolledtext2.grid(column=1, row=1, padx=10, pady=10)
-
+        # esto acciona que se vean los datos del usuario en el scrolledtext2
         self.insertarMensaje()
         
         
     def verUsuario(self):
-        try:
+        try: 
             self.dni2 = int(self.entradaDNI2.get())
         except Exception:
             self.dni2 = self.entradaDNI2.get()
