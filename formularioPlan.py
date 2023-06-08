@@ -118,7 +118,7 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
         #El stock es 0 hasta que se empiecen a cargar por los remitos
         self.labelframe1 = labelF(self.pagina1, text="Registrar Nueva Materia Prima", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelframe1.grid(column=0, row=0, padx=5, pady=10)
-
+        # 
         self.labelNombre = label(self.labelframe1, text="Nombre:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelNombre.grid(column=0, row=0, padx=4, pady=4)
         self.entradaNombre = entry(self.labelframe1, font=(self.fuente, 20), fg=self.fuenteB)
