@@ -271,17 +271,17 @@ class FormularioCompras:
         # remito
         self.labelframe2 = labelF(self.pagina2, text="Remito", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelframe2.grid(column=0, row=0, padx=5, pady=10)
-
+        # label y entrada del numero de remito
         self.labelNum = label(self.labelframe2, text="Número de remito:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelNum.grid(column=0, row=1, padx=4, pady=4)
         self.entradaNum = entry(self.labelframe2, font=(self.fuente, 20), fg=self.fuenteB)
         self.entradaNum.grid(column=1, row=1, padx=4, pady=4)
-
+        # label y entrada de la fecha de emision
         self.labelFechaEmi = label(self.labelframe2, text='Fecha de emisión:', font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelFechaEmi.grid(column=0, row=2, padx=4, pady=4)
         self.entradaFechaEmi = DateEntry(self.labelframe2, font=(self.fuente, 20), fg=self.fuenteB, width=15, background=self.backB, foreground='white', borderwidth=2)
         self.entradaFechaEmi.grid(column=1, row=2, padx=4, pady=4)
-
+        # se recuperan los nombres y dnis de los proveedores
         self.listaNom = Proveedor.recuperarNombres()
         self.listaDNI = Proveedor.recuperarDNIs()
 
@@ -294,16 +294,16 @@ class FormularioCompras:
 
         # Desempaquetar la lista ordenada en dos listas separadas
         self.listaNom, self.listaDNI = map(list, zip(*ordenado))
-
+        
         self.labelProve = label(self.labelframe2, text="Proveedor:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelProve.grid(column=0, row=3, padx=4, pady=4)
-
+        #comboProv guarda la lista de nombres de los proveedores
         self.comboProv = ttk.Combobox(self.labelframe2, font=(self.fuente, 20), width = 15, values=self.listaNom)
         # Adding combobox drop down list
         self.comboProv.set(self.listaNom[0])
         self.comboProv.grid(column = 1, row = 3)
-        self.comboProv.bind("<<ComboboxSelected>>", self.on_selectP)
-        
+        self.comboProv.bind("<<ComboboxSelected>>", self.on_selectP) # cada que se selecciona se cambia el valor del dni en textProv
+        # en labelProv se visualiza el dni del proveedor seleccionado
         self.textProv = self.listaDNI[0]
         self.labelProv = label(self.labelframe2, text=f"DNI: {self.textProv}", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelProv.grid(column=2, row=3, padx=4, pady=4)
@@ -311,31 +311,32 @@ class FormularioCompras:
         # idDetalleRemitoProveedor: cantidad fechaEntregaProducto idRemito idMateriaPrima idTipoEstadoMateriaPrima
         # idTipoEstadoMateriaPrima: descripcionEstadoMateriaPrima
         # detalleRemito
-        self.listaDetalles = []
+        self.listaDetalles = [] #se inicializa la lista de detalles
         self.labelDetalle = label(self.labelframe2, text="Detalle", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelDetalle.grid(column=0, row=4, padx=4, pady=4, sticky='w')
-
+        # se recuperan los nombres de las materias primas
         listaMat = MateriaPrima.recuperarNombres()
-        listaMat = [x[0] for x in listaMat]
-        listaMat = sorted(listaMat)
-         
+        listaMat = [x[0] for x in listaMat] # se convierte la lista de tuplas a una lista normal
+        listaMat = sorted(listaMat) # se ordena la lista alfabeticamente
+        # se obtiene la descripcion de la materia prima
         descripMP = MateriaPrima.obtenerArti("materiasprimas", "descripcionMateriaPrima", (listaMat[0], ), "MateriaPrima")
-        descripMP = descripMP[0]
+        descripMP = descripMP[0] # era una tupla, ahora solo es un valor
         self.textMat = descripMP[0]
+        # label de la materia prima con su descripcion
         self.labelMat = label(self.labelframe2, text=self.textMat, font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelMat.grid(column=1, row=5, padx=4, pady=4)
-
+        # comboMat con la lista de los nombres de las materias primas
         self.comboMat = ttk.Combobox(self.labelframe2, font=(self.fuente, 20), width = 15, values=listaMat)
         # Adding combobox drop down list
-        self.comboMat.set(listaMat[0])
+        self.comboMat.set(listaMat[0]) # se pone el primer nombre por defecto en la lista
         self.comboMat.grid(column = 0, row = 5)
-        self.comboMat.bind("<<ComboboxSelected>>", self.on_selectMP)
-
+        self.comboMat.bind("<<ComboboxSelected>>", self.on_selectMP) #cada vez que se selecciona un nombre acciona on_selectMP para obtener la nueva descripcion
+        # label y entrada de cantidad
         self.labelCant = label(self.labelframe2, text="Cantidad:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelCant.grid(column=0, row=6, padx=4, pady=4)
         self.entradaCant = entry(self.labelframe2, font=(self.fuente, 20), fg=self.fuenteB)
         self.entradaCant.grid(column=1, row=6, padx=4, pady=4)
-
+        # label y entrada de fecha de entrega
         self.labelFechaEnt = label(self.labelframe2, text='Fecha de entrega:', font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelFechaEnt.grid(column=0, row=7, padx=4, pady=4)
         self.entradaFechaEnt = DateEntry(self.labelframe2, font=(self.fuente, 20), fg=self.fuenteB, width=15, background=self.backB, foreground='white', borderwidth=2)
@@ -344,60 +345,67 @@ class FormularioCompras:
         listaD = ["Integro", "Defectuoso"]
         self.labelDescrip = label(self.labelframe2, text="Descripción de estado:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelDescrip.grid(column=0, row=8, padx=4, pady=4)
+        # se guardan en el comboDescrip la lista de descripcion de entrega de materia prima
         self.comboDescrip = ttk.Combobox(self.labelframe2, font=(self.fuente, 20), width = 15, values=listaD)
         # Adding combobox drop down list
         self.comboDescrip.grid(column = 1, row = 8)
         self.comboDescrip.set(listaD[0])
-
+        # para annadir una materia prima al detalle remito
         self.botonAnnadirMat = bt(self.labelframe2, text="Añadir", font=(self.fuente, 20), fg=self.fuenteB, background=self.backB, command=self.annadirSTMat)
         self.botonAnnadirMat.grid(column=2, row=8, padx=4, pady=4)
-
+        # scrolledtextMat para mostrar los datos de cada detalle
         self.scrolledtextMat = st.ScrolledText(self.labelframe2, font=(self.fuente, 15), width=30, height=5)
         self.scrolledtextMat.grid(column=0, row=9, padx=4, pady=4)
         # detalleRemito
-
+        # con esto se carga el remito
         self.botonCargarR = bt(self.labelframe2, text="Cargar Remito", font=(self.fuente, 30), fg=self.fuenteB, background=self.backB, command=self.cargarRemito)
         self.botonCargarR.grid(column=1, row=9, padx=4, pady=4)
 
     def annadirSTMat(self):
+        # se obtiene el id de la materia prima seleccionada
         idMP = MateriaPrima.obtenerId((self.comboMat.get(), ))
+        # se obtiene el id del tipo de descripcion 1 o 2
         idTEMP = self.comboDescrip.current()+1
-        print(idTEMP)
+        # se obtiene la fecha de entrega seleccionada
         fechaE = datetime.strptime(self.entradaFechaEnt.get(), '%m/%d/%y')
+        # se obtiene la cantidad
         cant = f.ingNumPosi(self.entradaCant.get(), "La cantidad")
-        if(type(cant) is not list):
+        if(type(cant) is not list): # si la cantidad no es lista, entonces es valida
             # idDetalleRemitoProveedor: cantidad fechaEntregaProducto idRemito idMateriaPrima idTipoEstadoMateriaPrima
             datos = (cant, fechaE, idMP, idTEMP)
             # creamos una lista de tuplas con cada detalle que tendrá el remito para cuando lo creemos
             self.listaDetalles.append(datos)
+            # se inserta los datos en el scrolledtextMat con el detalle annadido
             self.scrolledtextMat.insert(tk.END, f"{self.comboMat.get()} - {cant} - {self.entradaFechaEnt.get()} - {self.comboDescrip.get()}\n")
-        else:
+        else: # si cantidad es lista tiene un mensaje como unico elemento
             mb.showerror("Error", cant[0])
 
     def cargarRemito(self):
+        # se valida que el numero de remito sea positivo
         numRemito = f.ingNumPosi(self.entradaNum.get(), "El número de remito")
         mensajeNR="El número de remito ya existe en la base de datos."
         try:
+            # se trata de obtener el id remito
             idRemito = Remito.obtenerId((numRemito,))
-            if(idRemito==-1):
+            if(idRemito==-1): # si es -1 no existe en la bd
                 mensajeNR=""
         except Exception:
             mensajeNR=""
-
+        # si las entradas son true, entonces puede cargarse el remito
         entryValido = (self.listaDetalles!=[])&(type(numRemito) is not list)&(mensajeNR=="")
         if(entryValido):
             print("")
             fechaEmision = datetime.strptime(self.entradaFechaEmi.get(), '%m/%d/%y')
             #self.textProv almacena el DNI del proveedor seleccionado
+            # idProv guarda el id del proveedor
             idProv = Proveedor.obtenerId((self.textProv, ))
+            # se crea el remito y se guardar en la bd
             remito = Remito(numRemito, fechaEmision, idProv)
             idRemito = Remito.obtenerId((numRemito, ))
+            # por cada detalle en la listaDetalles ira dando de alta un nuevo detalle remito
             for detalle in self.listaDetalles:
                 #datos = (cant, fechaE, idMP, idTEMP)
                 remito.detalleRemito(detalle[0], detalle[1], idRemito, detalle[2], detalle[3])
-                #Cannot add or update a child row: a foreign key constraint fails 
-                #(`panaderia`.`detalleremitoproveedor`, CONSTRAINT `detalleremitoproveedor_ibfk_3` FOREIGN KEY 
-                #(`idTipoEstadoMateriaPrima`) REFERENCES `tipoestadomateriaprima` (`idTipoEstadoMateriaPrima`) ON DE)
             mb.showinfo("¡Felicidades!", "Remito cargado correctamente")
             self.listaDetalles.clear()
             self.entradaNum.delete(0, tk.END)
