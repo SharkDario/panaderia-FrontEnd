@@ -449,42 +449,41 @@ class FormularioVentas:
 
         entryValido = (self.listaDetalles!=[])&(type(numFactura) is not list)&(mensajeNR=="")
         if(entryValido):
-            print("")
-            fechaEmision = datetime.strptime(self.entradaFechaEmi.get(), '%m/%d/%y')
-            
-            medioP = self.comboTipoMP.current()+1
-            #print(self.usuario.nombre)
-            if(type(self.usuario) is Administrador):
-                idUser = Administrador.obtenerId((self.usuario.DNI, ))
-            else:
+            fechaEmision = datetime.strptime(self.entradaFechaEmi.get(), '%m/%d/%y') # se convierte la fecha de str a datetime
+            medioP = self.comboTipoMP.current()+1 # se obtiene el id de medio de pago (1-2-3-4)
+            if(type(self.usuario) is Administrador): # si el objeto self.usuario es administrador se llama a la clase Administrador
+                idUser = Administrador.obtenerId((self.usuario.DNI, )) # para obtener el id del administrador
+            else: # sino se llama a la clase Empleado para obtener el id del empleado
                 idUser = Empleado.obtenerId((self.usuario.DNI, ))
-            idCli = Cliente.obtenerId((self.textCli, ))
+            idCli = Cliente.obtenerId((self.textCli, )) # se obtiene el id del cliente
             #numeroFactura, fechaEmisionFactura, idTipoFactura, precioTotal, idMedioPago, idCliente, idUsuario
+            # se crea un objeto Factura que se guarda en la tabla factura en la base de datos
+            # el precio total es 0, hasta que se actualice por calcular segun los detalles
             factura = Factura(numFactura, fechaEmision, idTipoF, 0, medioP, idCli, idUser)
-            
+            # se obtiene el id de la factura dada de alta
             idFactura = Factura.obtenerId((numFactura, idTipoF))
+            # se inicia el acumulador
             precioTotal=0
-            
-            for detalle in self.listaDetalles:
+            for detalle in self.listaDetalles: # por cada detalle en la lista de detalles
                 #datos = (cant, precioU, idP) en detalle
                 #cantidad, precioUnitario, idFactura, idProducto) en detalleFactura
                 cant = detalle[0]
                 precioU = detalle[1]
                 idP = detalle[2]
+                # se da de alta un detalle en la tabla detallefactura en la BD con el ID de la factura en cuestion
                 factura.detalleFactura(cant, precioU, idFactura, idP)
                 precioTotal += cant*precioU
-
                 # actualización del stock de productos
-                stockActual = Producto.obtenerAtrib((idP, ), ("idProducto", ), "productos", "stockProducto")
-                stockActual = stockActual[0][0]
-                nuevoStock = stockActual - cant
-                Producto.modificarArti("productos", "idProducto", nuevoStock, idP, "stockProducto")
-
+                stockActual = Producto.obtenerAtrib((idP, ), ("idProducto", ), "productos", "stockProducto") # se obtienne el stock actual
+                stockActual = stockActual[0][0] # la lista de una tupla de un valor, se convierte en una variable float que guarda ese valor
+                nuevoStock = stockActual - cant # se resta del stock actual la cantidad del detalle
+                Producto.modificarArti("productos", "idProducto", nuevoStock, idP, "stockProducto") # se actualiza el stock del producto
+            # se actualiza el precio total de la factura
             factura.actualizarTotal(precioTotal, idFactura)
             mb.showinfo("¡Felicidades!", f"Factura cargada correctamente (PRECIO TOTAL: ${precioTotal})")
-            self.listaDetalles.clear()
-            self.entradaNum.delete(0, tk.END)
-            self.scrolledtextPro.delete("1.0", tk.END)
+            self.listaDetalles.clear() # se limpia la listaDetalles
+            self.entradaNum.delete(0, tk.END) # se elimina lo ingresado en la entradaNum
+            self.scrolledtextPro.delete("1.0", tk.END) # se limpia el scrolledtext de los detalles
         else:
             mensaje=""
             if(type(numFactura) is list):
