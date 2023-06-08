@@ -82,13 +82,9 @@ class FormularioProduccion:
         self.style = ttk.Style(self.cuaderno1)
         self.style.theme_use(self.tema)
         
-        #SI: blue, smog, black, adapta
-        #EH: kroc, plastik, winxpblue, itft1, aquativo, clam
-        #NO: equilux, keramik, elegance, radiance, breeze, clearlooks, ubuntu, yaru, scidmint
-        #[ 'alt', 'scidpurple', 'scidpink', 
-        #'default', 'scidblue', 'classic', 'xpnative', 
-        #, 'scidgrey', 'scidsand', 'scidgreen', 'arc', 'vista', 'winnative']
+        # produccion() es para ingresar la cantidad de productos y sumarlos al stock
         self.produccion()
+        # 
         self.producto()
         self.productoSM()
         self.cuaderno1.grid(column=1, row=1, padx=10, pady=10)
