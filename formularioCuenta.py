@@ -202,17 +202,17 @@ class FormularioCuenta:
         
         
     def verUsuario(self):
-        try: 
-            self.dni2 = int(self.entradaDNI2.get())
+        try: # se guarda el dni
+            self.dni2 = int(self.entradaDNI2.get()) # 
         except Exception:
             self.dni2 = self.entradaDNI2.get()
         self.datos = (self.dni2, )
-        self.listaDNIs = Empleado.obtenerDNIs()
-        self.emple = Empleado.obtenerEmpleado(self.listaDNIs, self.datos, True)
+        self.listaDNIs = Empleado.obtenerDNIs() # obtiene los dnis de los empleados
+        self.emple = Empleado.obtenerEmpleado(self.listaDNIs, self.datos, True) # obtiene el empleado
         consulta = self.emple
         if consulta is not False:
             #(DNI, CUIL_CUIT, nombre, domicilio, telefono, user, clave, idTipoEmpleado, puesto
-            if(consulta[8]==1):
+            if(consulta[8]==1): # depende el valor de consulta es el puesto del empleado
                 puesto="Repositor"
             elif(consulta[8]==2):
                 puesto="Vendedor"
