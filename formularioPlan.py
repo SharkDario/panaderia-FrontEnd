@@ -504,7 +504,6 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
                     productosCantidades[nombre] = cant
                 else: # Si no, entonces quiere decir que esta en el diccionario, por lo tanto acumulamos
                     productosCantidades[nombre] += cant
-
             # Convertimos el diccionario a dos listas otra vez
             nombresProductos = list(productosCantidades.keys())
             cantidades = list(productosCantidades.values())
@@ -514,9 +513,7 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
             plt.bar(nombresProductos, cantidades, color=colores)
             plt.xlabel('Productos') # fijamos lo que dice en el eje x
             plt.ylabel('Cantidad vendida') # fijamos lo que dice en el eje y
-            # titulo del 
             plt.title(f'Venta de productos entre {self.entradaFInicio.get()} y {self.entradaFFin.get()}') 
-
             plt.show()
         else:
             mb.showerror("Error", "La fecha de inicio debe ser antes o igual a la fecha de fin.")
