@@ -325,20 +325,24 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
         descripMP = descripMP[0]
         self.textMat = descripMP[0]
         self.labelMat.config(text=self.textMat)
-
+    #para annadie una materia prima a un producto en su fabricacion, se guarda en la tabla fabricacion
     def annadirMPaP(self):
-        #print("1", )
+        #se valida que la cantidad sea positiva
         cantidad = f.ingNumPosi(self.entradaCant.get(), "La cantidad")
-        
+        # si la cantidad es una lista, entonces guarda el mensaje de error, o si esta vacia no se dara de alta una nueva fabricacion
         if((type(cantidad) is not list)&(cantidad!="")):
+            # se obtiene el id de la materia prima
             idMatPrima = MateriaPrima.obtenerId((self.comboMat.get(), ))
+            # se obtiene el producto mediante su nombre
             producto = Producto.obtenerPro(self.comboPro.get())
+            # si valorV devuelve True, entonces ya existe la materia prima dentro del producto
+            # sino entonces se carga en la tabla de fabricacion y muestra el mensaje de Felicidades
             valorV = producto.fabricacion(idMatPrima, cantidad)
             if(valorV):
                 mb.showerror("Error", f'{self.comboMat.get()} ya existe en la fabricación del producto {self.comboPro.get()}')
             else:
                 mb.showinfo("¡Felicidades!", f'{self.comboMat.get()} añadido a {self.comboPro.get()}')
-        else:
+        else: # se muestran estos mensajes en caso de que se haya ingresado mal la cantidad
             mensaje=""
             #print(dni)
             if(cantidad == ""):
@@ -348,7 +352,7 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
             #print(mensaje)
             mb.showerror("Error", mensaje)
         self.entradaCant.delete(0, tk.END)
-
+    #para ver los datos de un productos y darlo de baja si se desea
     def productoVerEliminar(self):
         self.pagina5 = ttk.Frame(self.cuaderno1)
         self.pagina5.config(width=800, height=750)
@@ -356,12 +360,12 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
 
         self.labelframe5 = labelF(self.pagina5, text="Información de Producto", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelframe5.grid(column=0, row=0, padx=5, pady=10)
-
+        # se recuperan los nombres de los productos
         self.listaNom2 = Producto.recuperarNombres()
-        
+        # la lista de tuplas se convierte en una lista normal
         self.listaNom2 = [x[0] for x in self.listaNom2]
 
-        # Empaquetar las dos listas utilizando zip y ordenarlas por el primer elemento de cada par (listaNom)
+        # se ordena la lista alfabeticamente
         self.listaNom2 = sorted(self.listaNom2)
         
         self.labelProve2 = label(self.labelframe5, text="Producto:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
@@ -370,9 +374,9 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
         self.comboProv2 = ttk.Combobox(self.labelframe5, font=(self.fuente, 20), width = 15, values=self.listaNom2)
         # Adding combobox drop down list
         self.comboProv2.set(self.listaNom2[0])
-        self.comboProv2.grid(column = 1, row = 1)
+        self.comboProv2.grid(column = 1, row = 1) #cada vez que el comboProv2 se cambia, acciona on_selectP2
         self.comboProv2.bind("<<ComboboxSelected>>", self.on_selectP2)
-
+        #scrolledtext donde se mostraran los datos del producto seleccionado
         self.scrolledtext2 = st.ScrolledText(self.labelframe5, font=(self.fuente, 20), width=20, height=10)
         self.scrolledtext2.grid(column=0, row=2, padx=10, pady=10)
         self.on_selectP2()
@@ -381,28 +385,24 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
         self.botonEliminar.grid(column=1, row=2, padx=4, pady=4)
 
     def bajaProducto(self):
-        indice = self.comboProv2.current()
-        nombre = self.comboProv2.get()
-        self.listaNom2.pop(indice)
-        self.comboProv2.config(values=self.listaNom2)
-        idProv = Producto.obtenerId((nombre, ))
-        Producto.bajaProducto(idProv)
+        indice = self.comboProv2.current() # se obtiene el indice del comboProv2 donde estan los nombres de los productos
+        nombre = self.comboProv2.get() # se obtiene el nombre del producto
+        self.listaNom2.pop(indice) # se borra de la lista de nombres segun el indice
+        self.comboProv2.config(values=self.listaNom2) # se inserta la lista de nombres nueva en el comboBox de los productos
+        idProv = Producto.obtenerId((nombre, )) # se obtiene el id del producto
+        Producto.bajaProducto(idProv) # se da de baja el producto de la base de datos
         mb.showinfo("¡Felicidades!", "Producto dado de baja")
-
+    # se acciona cada vez que el comboProv2 se selecciona
     def on_selectP2(self, event=None):
         indice = self.comboProv2.current()
         self.scrolledtext2.config(state="normal")
-        
+        # se obtiene el producto mediante el nombre del comboBox
         produc1 = Producto.obtenerPro(self.comboProv2.get())
-        #self.nombre = nombre
-        #self.descripcion = descripcion
-        #self.precioU = precioUnitario
-        #self.stock = stock
-        #self.stockM
+        #se crea el mensaje para visualizar los datos del objeto producto
         mensaje = f"Nombre: {produc1.nombre}\nUnidad de medida: {produc1.descripcion}\nPrecio unitario: {produc1.precioU}\nStock actual: {produc1.stock}\nStock mínimo: {produc1.stockM}"
         self.scrolledtext2.delete("1.0", tk.END)
-        self.scrolledtext2.insert(tk.END, mensaje)
-        self.scrolledtext2.config(state="disabled")
+        self.scrolledtext2.insert(tk.END, mensaje) # se inserta el mensaje en el scrolledtext2
+        self.scrolledtext2.config(state="disabled") # se desactiva la edicion para que el usuario no escriba sobre el scrolledtext
 
     
     def materiaPVerEliminar(self):
