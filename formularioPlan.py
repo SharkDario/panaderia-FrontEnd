@@ -440,64 +440,63 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
         indice = self.comboProv3.current() #se obtiene el indice del nombre de materia prima
         nombre = self.comboProv3.get() # nombre de materia prima
         self.listaNom3.pop(indice) # se elimina de la lista de nombres el 
-        self.comboProv3.config(values=self.listaNom3)
-        idProv = MateriaPrima.obtenerId((nombre, ))
-        MateriaPrima.bajaMateriaP(idProv)
+        self.comboProv3.config(values=self.listaNom3) # en el comboBox de la materia prima se pone la nueva lista sin ese nombre
+        idProv = MateriaPrima.obtenerId((nombre, )) # se obtiene el id de la materia prima a eliminar
+        MateriaPrima.bajaMateriaP(idProv) # se da de baja la materia prima
         mb.showinfo("¡Felicidades!", "Materia prima dada de baja")
 
     def on_selectP3(self, event=None):
-        indice = self.comboProv3.current()
-        self.scrolledtext3.config(state="normal")
+        indice = self.comboProv3.current() #se obtiene el indice del nombre de materia prima
+        self.scrolledtext3.config(state="normal") #se permite que se pueda editar el scrolledtext
         
-        mat1 = MateriaPrima.obtenerMat(self.comboProv3.get())
-        
+        mat1 = MateriaPrima.obtenerMat(self.comboProv3.get()) # se obtiene la materia prima mediante el nombre
+        # se guarda en un mensaje todos los atributos del objeto materia prima
         mensaje = f"Nombre: {mat1.nombre}\nUnidad de medida: {mat1.descripcion}\nPrecio unitario: {mat1.precioU}\nStock actual: {mat1.stock}\nStock mínimo: {mat1.stockM}"
         self.scrolledtext3.delete("1.0", tk.END)
-        self.scrolledtext3.insert(tk.END, mensaje)
-        self.scrolledtext3.config(state="disabled")
+        self.scrolledtext3.insert(tk.END, mensaje) # se inserta el mensaje en el scrolledtext
+        self.scrolledtext3.config(state="disabled") # se desactiva la edicion
     
-    def verProductosMasV(self):
+    def verProductosMasV(self): # ver productos mas vendidos en un rango de fechas determinado por el usuario
         self.pagina7 = ttk.Frame(self.cuaderno1)
         self.pagina7.config(width=800, height=750)
         self.cuaderno1.add(self.pagina7, text="Ver Productos Más Vendidos")
         self.labelframe7 = labelF(self.pagina7, text="Información Productos Más Vendidos", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelframe7.grid(column=0, row=0, padx=5, pady=10)
-
+        # label y entrada de la fecha de inicio
         self.labelFInicio = label(self.labelframe7, text='Fecha de inicio:', font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelFInicio.grid(column=0, row=0, padx=4, pady=4)
         self.entradaFInicio = DateEntry(self.labelframe7, font=(self.fuente, 20), fg=self.fuenteB, width=15, background=self.backB, foreground='white', borderwidth=2)
         self.entradaFInicio.grid(column=1, row=0, padx=4, pady=4)
-
+        # label y entrada de la fecha de fin
         self.labelFFin = label(self.labelframe7, text='Fecha de fin:', font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelFFin.grid(column=0, row=1, padx=4, pady=4)
         self.entradaFFin = DateEntry(self.labelframe7, font=(self.fuente, 20), fg=self.fuenteB, width=15, background=self.backB, foreground='white', borderwidth=2)
         self.entradaFFin.grid(column=1, row=1, padx=4, pady=4)
-
+        # boton que acciona calcularProductosMasV
         self.botonConsultar = bt(self.labelframe7, text="Consultar", font=(self.fuente, 20), fg=self.fuenteB, background=self.backB, command=self.calcularProductosMasV)
         self.botonConsultar.grid(column=1, row=10, padx=4, pady=4)
 
-    def calcularProductosMasV(self):
-        fechaIni=datetime.strptime(self.entradaFInicio.get(), '%m/%d/%y')
-        fechaFin=datetime.strptime(self.entradaFFin.get(), '%m/%d/%y')
-        if(fechaIni <= fechaFin): #si es válida la fecha
-            facturas = Factura.recuperarFechaEspecifica(fechaIni, fechaFin)
-            #[(fact1),(fact2)]
-            #idFactura numeroFactura fechaEmisionFactura idTipoFactura precioTotal idMedioPago idCliente idUsuario
-            #print(facturas)
-            nombresProductos=[]
-            cantidades=[]
-            for factu in facturas:
-                factuDetalle=Factura.obtenerDetalle(factu[0])
-                for detalle in factuDetalle:
+    def calcularProductosMasV(self): # calcular productos mas vendidos en un rango determinado
+        fechaIni=datetime.strptime(self.entradaFInicio.get(), '%m/%d/%y') # se convierte la fecha que estaba en str a datetime
+        fechaFin=datetime.strptime(self.entradaFFin.get(), '%m/%d/%y') # se convierte la fecha que estaba en str a datetime
+        if(fechaIni <= fechaFin): #si la fecha de inicio es menor o igual a la fecha final, quiere decir que es un rango valido
+            facturas = Factura.recuperarFechaEspecifica(fechaIni, fechaFin) # se recuperan todas las facturas en ese rango especifico
+            # tendra esta apariencia la consulta "facturas": [(fact1),(fact2)] 
+            # Y cada fact1 tendra estos datos: idFactura numeroFactura fechaEmisionFactura idTipoFactura precioTotal idMedioPago idCliente idUsuario
+            nombresProductos=[] # se inicializa una lista para los nombres de los productos
+            cantidades=[] # se inicializa otra para sus respectivas cantidades
+            for factu in facturas: # por cada factura dentro de facturas
+                factuDetalle=Factura.obtenerDetalle(factu[0]) # se obtiene su detalle mediante el idFactura
+                for detalle in factuDetalle: # por cada detalle dentro del factuDetalle
                     #idDetalleF, cantidad, precioUnitario, idFactura, idProducto
                     idPro = detalle[4]
-                    nombreP = Producto.obtenerAtrib((idPro, ), ("idProducto", ), "productos", "nombreProducto")
-                    nombreP = nombreP[0][0]
-                    nombresProductos.append(nombreP)
-                    cantidades.append(detalle[1])
-            #print(nombresProductos)
-            #print(cantidades)
-            # Creamos un diccionario para almacenar las cantidades acumuladas
+                    # se obtiene el nombre del producto mediante el id proporcionado 
+                    nombreP = Producto.obtenerAtrib((idPro, ), ("idProducto", ), "productos", "nombreProducto") 
+                    nombreP = nombreP[0][0] # la consulta que es una lista de tupla, se convierte en un solo elemento 
+                    nombresProductos.append(nombreP) # se agrega el nombre a la lista de nombres
+                    cantidades.append(detalle[1]) # se agrega la cantidad a la lista de cantidades
+            # Como en nombresProductos puede que los productos se repitan sus nombres, hay que acumular sus cantidades
+            # Entonces creamos un diccionario para almacenar las cantidades acumuladas
             productosCantidades = {}
             # Recorremos las listas y acumulamos las cantidades
             for nombre, cant in zip(nombresProductos, cantidades):
@@ -513,9 +512,10 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
             colores = plt.cm.viridis(np.linspace(0, 1, len(nombresProductos)))
             # Creamos las barras
             plt.bar(nombresProductos, cantidades, color=colores)
-            plt.xlabel('Productos')
-            plt.ylabel('Cantidad vendida')
-            plt.title(f'Venta de productos entre {self.entradaFInicio.get()} y {self.entradaFFin.get()}')
+            plt.xlabel('Productos') # fijamos lo que dice en el eje x
+            plt.ylabel('Cantidad vendida') # fijamos lo que dice en el eje y
+            # titulo del 
+            plt.title(f'Venta de productos entre {self.entradaFInicio.get()} y {self.entradaFFin.get()}') 
 
             plt.show()
         else:
