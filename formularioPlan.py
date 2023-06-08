@@ -380,7 +380,7 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
         self.scrolledtext2 = st.ScrolledText(self.labelframe5, font=(self.fuente, 20), width=20, height=10)
         self.scrolledtext2.grid(column=0, row=2, padx=10, pady=10)
         self.on_selectP2()
-
+        # este boton acciona bajaProducto
         self.botonEliminar = bt(self.labelframe5, text="Dar de baja", font=(self.fuente, 20), fg=self.fuenteB, background=self.backB, command=self.bajaProducto)
         self.botonEliminar.grid(column=1, row=2, padx=4, pady=4)
 
@@ -404,7 +404,7 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
         self.scrolledtext2.insert(tk.END, mensaje) # se inserta el mensaje en el scrolledtext2
         self.scrolledtext2.config(state="disabled") # se desactiva la edicion para que el usuario no escriba sobre el scrolledtext
 
-    
+    #aqui se puede ver las materias primas y eliminarlas si se desea
     def materiaPVerEliminar(self):
         self.pagina6 = ttk.Frame(self.cuaderno1)
         self.pagina6.config(width=800, height=750)
@@ -412,31 +412,31 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
         #labelframe5 -> 6
         self.labelframe6 = labelF(self.pagina6, text="Información de Materia Prima", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelframe6.grid(column=0, row=0, padx=5, pady=10)
-        #listaNom2 -> 3
+        #se recuperan los nombres de las materias primas
         self.listaNom3 = MateriaPrima.recuperarNombres()
-        
+        # se convierte la lista de tuplas a lista normal
         self.listaNom3 = [x[0] for x in self.listaNom3]
 
-        # Empaquetar las dos listas utilizando zip y ordenarlas por el primer elemento de cada par (listaNom)
+        # se ordena la lista de nombres alfabeticamente
         self.listaNom3 = sorted(self.listaNom3)
         #labelProve2 -> 3
         self.labelProve3 = label(self.labelframe6, text="Materia prima:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelProve3.grid(column=0, row=1, padx=4, pady=4)
-        #comboProv2 -> 3
+        #comboProv3 guardar los nombres de la listaNom3, con los nombres de las materias primas
         self.comboProv3 = ttk.Combobox(self.labelframe6, font=(self.fuente, 20), width = 15, values=self.listaNom3)
         # Adding combobox drop down list
         self.comboProv3.set(self.listaNom3[0])
         self.comboProv3.grid(column = 1, row = 1)
-        self.comboProv3.bind("<<ComboboxSelected>>", self.on_selectP3)
-        #scrolledtext2 -> 3
+        self.comboProv3.bind("<<ComboboxSelected>>", self.on_selectP3) #cada vez q se selecciona activa selectP3
+        #scrolledtext3 mostrara los datos de la materia prima seleccionada
         self.scrolledtext3 = st.ScrolledText(self.labelframe6, font=(self.fuente, 20), width=20, height=10)
         self.scrolledtext3.grid(column=0, row=2, padx=10, pady=10)
         self.on_selectP3()
-
-        self.botonEliminar = bt(self.labelframe6, text="Dar de baja", font=(self.fuente, 20), fg=self.fuenteB, background=self.backB, command=self.bajaCliente)
+        #se eliminar una materia prima mediante este boton
+        self.botonEliminar = bt(self.labelframe6, text="Dar de baja", font=(self.fuente, 20), fg=self.fuenteB, background=self.backB, command=self.bajaMateriaP)
         self.botonEliminar.grid(column=1, row=2, padx=4, pady=4)
 
-    def bajaCliente(self):
+    def bajaMateriaP(self):
         indice = self.comboProv3.current()
         nombre = self.comboProv3.get()
         self.listaNom3.pop(indice)
