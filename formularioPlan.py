@@ -54,7 +54,7 @@ Sizegrip: TSizegrip
 Treeview: Treeview
 """
 
-class FormularioPlan:
+class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros, la ventana anterior, y el usuario que ha ingresado al sistema
     def __init__(self, ventana, usuario):
         self.usuario = usuario
         self.tema = "itft1" #itft1 smog
@@ -80,30 +80,32 @@ class FormularioPlan:
         self.cuaderno1 = ttk.Notebook(self.ventana36)
 
         #print(self.ventana34.get_themes())
+        # Se pone un estilo al cuaderno para que el diseño sea mejor
         self.style = ttk.Style(self.cuaderno1)
         self.style.theme_use(self.tema)
         
-        #SI: blue, smog, black, adapta
-        #EH: kroc, plastik, winxpblue, itft1, aquativo, clam
-        #NO: equilux, keramik, elegance, radiance, breeze, clearlooks, ubuntu, yaru, scidmint
-        #[ 'alt', 'scidpurple', 'scidpink', 
-        #'default', 'scidblue', 'classic', 'xpnative', 
-        #, 'scidgrey', 'scidsand', 'scidgreen', 'arc', 'vista', 'winnative']
-
+        #materiaPrima() es la pagina del cuaderno para registrar una nueva materia prima
         self.materiaPrima()
+        #producto() es la pagina del cuarderno para registrar un nuevo producto
         self.producto()
+        #fabricacion() es la pagina del cuaderno para registrar las materias primas que utiliza un producto
         self.fabricacion()
+        #productoVerEliminar() se puede visualizar un producto y darlo de baja de la base de datos
         self.productoVerEliminar()
+        #materiaPVerEliminar() se puede visualizar una materia prima y darla de baja de la base de datos
         self.materiaPVerEliminar()
+        #verProductosMasV() se pueden visualizar los productos mas vendidos segun una intervalo de fechas ingresadas
         self.verProductosMasV()
 
         self.cuaderno1.grid(column=1, row=1, padx=10, pady=10)
         self.ventana36.mainloop()
 
    
-
-    def volverFormularioUsuario(self):
+    #para ir a la ventana anterior "FormularioUsuario"
+    def volverFormularioUsuario(self): 
+        # reaparece la ventana3
         self.ventana3.deiconify()
+        # se destruye la ventana36
         self.ventana36.destroy()
 
     def materiaPrima(self):
@@ -136,18 +138,21 @@ class FormularioPlan:
         self.labelStockM.grid(column=0, row=4, padx=4, pady=4)
         self.entradaStockM = entry(self.labelframe1, font=(self.fuente, 20), fg=self.fuenteB)
         self.entradaStockM.grid(column=1, row=4, padx=4, pady=4)
-
+        # Mediante este boton se acciona el metodo altaNuevaMateriaPrima
         self.botonConfirmar = bt(self.labelframe1, text="Registrar", font=(self.fuente, 20), fg=self.fuenteB, background=self.backB, command=self.altaNuevaMateriaPrima)
         self.botonConfirmar.grid(column=1, row=10, padx=4, pady=4)
         
-
+    # se da de alta una nueva materia prima
     def altaNuevaMateriaPrima(self):
+        # se obtiene el id de la materia prima
         idMateria = MateriaPrima.obtenerId((self.entradaNombre.get(), ))
+        # se valida que el nombre de la nueva materia prima no existe en la base de datos
         nombre = f.ingNombreMatPro(self.entradaNombre.get(), idMateria, "de la materia prima")
         descrip = self.entradaDescrip.get()
+        # se valida que sean numeros positivos tanto el precio como el stock minimo
         precioU = f.ingNumPosi(self.entradaPU.get(), "El precio unitario")
         stockM = f.ingNumPosi(self.entradaStockM.get(), "El stock mínimo")
-        
+        # todas las entradas con sus valores de verdad para comprobar si se puede dar de alta la materia prima o hay algun error en el ingreso de datos
         entrysValidos = ((nombre!="")&(descrip!="")&(type(precioU) is not list)&(type(stockM) is not list)&(type(nombre) is not list))
         if(entrysValidos):
             #Al dar de alta una nueva materia prima su stock es 0
@@ -160,7 +165,7 @@ class FormularioPlan:
                 mensaje += "\nEl nombre no puede estar vacío."
             if(descrip == ""):
                 mensaje += "\nLa descripción no puede estar vacía."
-            if(type(precioU) is list):
+            if(type(precioU) is list): # Cuando alguna de las variables se ha ingresado un valor incorrecto devuelve una lista con el mensaje de error
                 mensaje += "\n"+precioU[0]
             if(type(stockM) is list):
                 mensaje += "\n"+stockM[0]
@@ -168,11 +173,12 @@ class FormularioPlan:
                 mensaje += "\n"+nombre[0]
             #print(mensaje)
             mb.showerror("Error", mensaje)
+        # Se eliminan los valores dentro de las entradas
         self.entradaDescrip.delete(0, tk.END)
         self.entradaPU.delete(0, tk.END)
         self.entradaNombre.delete(0, tk.END)
         self.entradaStockM.delete(0, tk.END)
-
+    #registrar un nuevo producto
     def producto(self):
         
         self.pagina2 = ttk.Frame(self.cuaderno1)
