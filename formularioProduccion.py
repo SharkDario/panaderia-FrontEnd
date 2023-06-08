@@ -136,37 +136,32 @@ class FormularioProduccion:
         self.labelCant.grid(column=0, row=2, padx=4, pady=4)
         self.entradaCant = entry(self.labelframe1, font=(self.fuente, 20), fg=self.fuenteB)
         self.entradaCant.grid(column=1, row=2, padx=4, pady=4)
-        # 
+        # boton que al ser presionado activa cargaStockPro
         self.botonConfirmar = bt(self.labelframe1, text="Producir", font=(self.fuente, 20), fg=self.fuenteB, background=self.backB, command=self.cargaStockPro)
         self.botonConfirmar.grid(column=1, row=10, padx=4, pady=4)
-
         self.labeltextProP = label(self.labelframe1, text=f"MATERIA PRIMA\t\t  CANTIDAD", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labeltextProP.grid(column=0, row=11, padx=4, pady=4)
-
+        #scrolledtext de la materia prima, con sus nombres, descripcion y cantidad
         self.scrolledtextProP = st.ScrolledText(self.labelframe1, font=(self.fuente, 15), width=40, height=15)
         self.scrolledtextProP.grid(column=0, row=12, padx=5, pady=10)
-        self.on_selectP()
+        self.on_selectP() #acciona el metodo on_selectP()
 
     def cargaStockPro(self):
         # Actualizar el stock de productos
-        cantidad = f.ingNumPosi(self.entradaCant.get(), "La cantidad")
-
-        #si cantidad es mayor a 0 entonces hago todo lo de abajo
-       
-        if(type(cantidad) is not list):
-        
-            nombre = self.comboPro.get()
-            producto1 = Producto.obtenerPro(nombre)
-            idPro = Producto.obtenerId((nombre, ))
-            listaMateriaPrima = producto1.recuperarMateriasPrimas(idPro)
-
+        cantidad = f.ingNumPosi(self.entradaCant.get(), "La cantidad") # se valida que la cantidad sea positiva
+        # si cantidad es mayor a 0 entonces hago todo lo de abajo
+        if(type(cantidad) is not list): 
+            nombre = self.comboPro.get() # se obtiene el nombre del producto mediante el comboPro
+            producto1 = Producto.obtenerPro(nombre) # se obtiene el producto mediante el nombre
+            idPro = Producto.obtenerId((nombre, )) # se obtiene el id producto mediante el nombre
+            listaMateriaPrima = producto1.recuperarMateriasPrimas(idPro) # se recuperan los nombres de las materias primas que se utilizan en el producto
             MPSuficiente=True
-            for datoMP in listaMateriaPrima:
+            for datoMP in listaMateriaPrima: # se recorre cada materia prima de la lista
                 #datoMP - (idMateriaPrima, CantidadMateriaPrima)
                 idMP = datoMP[0] 
                 cantidadMP = datoMP[1] #cantidad por la receta
                 stockMP = MateriaPrima.obtenerAtrib((idMP, ), ("idMateriaPrima", ), "materiasprimas", "stockMateriaPrima")
-                stockMP = stockMP[0][0]
+                stockMP = stockMP[0][0] # la lista de tupla [(stockMP,)] se convierte en un valor stockMP
                 cantidadMPTotal = cantidad * cantidadMP # cantidad ingresada x la cantidadMP necesaria
                 if(cantidadMPTotal>stockMP): #entonces no hay suficiente materia prima en stock para realizar la fabricación
                     MPSuficiente=False
@@ -174,13 +169,12 @@ class FormularioProduccion:
 
             #si tengo la materia prima suficiente (con respecto a la cantidad) entonces hago todo lo de abajo
             if(MPSuficiente):
-                
-                for datoMP in listaMateriaPrima:
+                for datoMP in listaMateriaPrima: # se recorre cada materia prima de la lista
                     #datoMP - (idMateriaPrima, CantidadMateriaPrima)
                     idMP = datoMP[0]
                     cantidadMP = datoMP[1] #cantidad por la receta
                     stockMP = MateriaPrima.obtenerAtrib((idMP, ), ("idMateriaPrima", ), "materiasprimas", "stockMateriaPrima")
-                    stockMP = stockMP[0][0]
+                    stockMP = stockMP[0][0] # la lista de tupla [(stockMP,)] se convierte en un valor stockMP
                     cantidadMPTotal = cantidad * cantidadMP # cantidad ingresada x la cantidadMP necesaria
                     nuevoStockMP = stockMP - cantidadMPTotal
                     MateriaPrima.modificarArti("materiasprimas", "idMateriaPrima", nuevoStockMP, idMP, "stockMateriaPrima")
