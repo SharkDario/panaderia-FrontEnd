@@ -218,9 +218,10 @@ class FormularioCuenta:
                 puesto="Vendedor"
             else:
                 puesto="Productor"
+            # mensaje que guarda los datos del usuario
             mensaje = "ID: "+str(consulta[0])+"\nDNI: "+str(consulta[1])+"\nCUIL/CUIT: "+str(consulta[2])+"\nNombre: "+consulta[3]+"\nDomicilio: "+consulta[4]+"\nTeléfono: "+str(consulta[5])+"\nUsuario: "+consulta[6]+"\nCargo: "+puesto
-            self.scrolledtext2.delete("1.0", tk.END)
-            self.scrolledtext2.insert(tk.END, mensaje)
+            self.scrolledtext2.delete("1.0", tk.END) # se elimina lo que tenga
+            self.scrolledtext2.insert(tk.END, mensaje) # se inserta el mensaje con los datos del usuario
         else:
             self.entradaDNI2.delete(0, tk.END)
             #self.scrolledtext2.configure(state='normal')
@@ -230,29 +231,3 @@ class FormularioCuenta:
     
 
         
-        #subprocess.call(["python", "formularioInicio.py"])
-
-
-
-#a#['adapta', 'alt', 'blue', 'scidpurple', 'scidpink', 'aquativo', 'itft1', 'equilux', 'elegance', 
-        #'default', 'clam', 'black', 'scidblue', 'winxpblue', 'classic', 'radiance', 'scidmint', 'xpnative', 
-        #'yaru', 'ubuntu', 'kroc', 'plastik', 'breeze', 'scidgrey', 'scidsand', 'scidgreen', 'clearlooks', 'smog', 'arc', 'vista', 'keramik', 'winnative']
-        """
-        our_themes = self.ventana34.get_themes()
-        print(our_themes)
-        self.style = ttk.Style(self.cuaderno1)
-        self.style.theme_use("adapta")
-
-        my_menu = Menu(self.ventana34)
-        self.ventana34.config(menu=my_menu)
-
-        theme_menu = Menu(my_menu, tearoff=0)
-        my_menu.add_cascade(menu=theme_menu)
-        
- def changer(self, theme):
-        self.style = ttk.Style(self.cuaderno1)
-        self.style.theme_use(theme)
-
-        for t in our_themes:
-            theme_menu.add_command(label=t , command=self.changer(t))
-        """
