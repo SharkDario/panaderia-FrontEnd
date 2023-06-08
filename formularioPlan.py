@@ -118,22 +118,22 @@ class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros,
         #El stock es 0 hasta que se empiecen a cargar por los remitos
         self.labelframe1 = labelF(self.pagina1, text="Registrar Nueva Materia Prima", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelframe1.grid(column=0, row=0, padx=5, pady=10)
-        # 
+        # label y entrada del nombre de MP
         self.labelNombre = label(self.labelframe1, text="Nombre:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelNombre.grid(column=0, row=0, padx=4, pady=4)
         self.entradaNombre = entry(self.labelframe1, font=(self.fuente, 20), fg=self.fuenteB)
         self.entradaNombre.grid(column=1, row=0, padx=4, pady=4)
-
+        # label y entrada de la descripcion de MP
         self.labelDescrip = label(self.labelframe1, text="Descripción:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelDescrip.grid(column=0, row=1, padx=4, pady=4)
         self.entradaDescrip = entry(self.labelframe1, font=(self.fuente, 20), fg=self.fuenteB)
         self.entradaDescrip.grid(column=1, row=1, padx=4, pady=4)
-
+        #label y entrada del precio unitario de MP
         self.labelPU = label(self.labelframe1, text="Precio unitario:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelPU.grid(column=0, row=2, padx=4, pady=4)
         self.entradaPU = entry(self.labelframe1, font=(self.fuente, 20), fg=self.fuenteB)
         self.entradaPU.grid(column=1, row=2, padx=4, pady=4)
-        
+        # label y entrada de stock minimo de MP
         self.labelStockM = label(self.labelframe1, text="Stock mínimo:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
         self.labelStockM.grid(column=0, row=4, padx=4, pady=4)
         self.entradaStockM = entry(self.labelframe1, font=(self.fuente, 20), fg=self.fuenteB)
