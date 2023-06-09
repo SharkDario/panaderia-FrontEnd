@@ -26,9 +26,9 @@ from formularioVentas import FormularioVentas
 # tkinter.font.families() para ver las fuentes
 
 
-class FormularioUsuario:
-    def __init__(self, ventana, usuario):
-        self.ventana22 = ventana
+class FormularioUsuario: # Se define la clase 
+    def __init__(self, ventana, usuario): # Se inicializan los atributos de la clase ventana y usuario
+        self.ventana22 = ventana # Se definen algunas variables de configuración.
         self.usuario = usuario
         self.back = 'light blue'
         self.backB = 'LightSalmon1'
@@ -42,80 +42,87 @@ class FormularioUsuario:
         #🔙
         style = ttk.Style(self.ventana3)
         style.theme_use("blue")
+        # Se crea un botón y se asigna una función a ejecutar cuando se presione el botón
         self.botonAtras = bt(self.ventana3, text="⬅️", font=(self.fuente, 20), bg=self.backB, fg=self.fuenteB, command=self.abrirFormularioSesion)
+        # Se utiliza método grid() para darle ubicación
         self.botonAtras.grid(row=0, column=0, sticky='w')
         #print(usuario)
         #print(type(usuario))
+        # Se define una variable tipo con valor inicial "administrador"
         tipo="administrador"
         try:
-            tipo = self.usuario.cargo
+            tipo = self.usuario.cargo # Se intenta acceder al atributo cargo del objeto. Si existe, se asigna el valor a tipo
             #print(tipo)
         except Exception:
-            tipo = "administrador"
+            tipo = "administrador" # Si ocurre una excepción, se captura y se asigna "administrador a tipo"
 
+        # Se crea una etiqueta en la ventana. Se configura el texto y el tipo de usuario, se establece la fuente, el color del texto y el color de fondo    
         self.labelSuperior = label(self.ventana3, text=f"¡Hola, {self.usuario.nombre}! ({tipo})", font=(self.fuente, 30), fg=self.fuenteB, background=self.back)
-        self.labelSuperior.grid(row=0, column=1, padx=10, sticky='w')
-
+        self.labelSuperior.grid(row=0, column=1, padx=10, sticky='w') # Se le da ubicación
+        # Se crea una etiqueta en la ventana. Se establece fuente, color de texto y color de fondo.
         self.labelE = label(self.ventana3, font=(self.fuente, 30), fg=self.fuenteB, background=self.back)
-        self.labelE.grid(row=1, column=0, pady=20, sticky='w')
+        self.labelE.grid(row=1, column=0, pady=20, sticky='w') # Se le da ubicación
 
         
-
+        # Se crea un botón con el texto "CUENTA". Se configura fuente, color de fondo, color de texto y se le asigna una función
         self.botonCuenta = bt(self.ventana3, text="CUENTA", font=(self.fuente, 20), bg=self.backB, fg=self.fuenteB, command=self.abrirFormularioCuenta)
-        self.botonCuenta.grid(row=2, column=1, padx=10, pady=10, sticky='w')
+        self.botonCuenta.grid(row=2, column=1, padx=10, pady=10, sticky='w') #Se ubica el boton
         #-Stock Producto
         if((tipo=="administrador")|(tipo=="vendedor")):
             self.botonVenta = bt(self.ventana3, text="VENTAS        ", font=(self.fuente, 20), bg=self.backB, fg=self.fuenteB, command=self.abrirFormularioVentas)
             self.botonVenta.grid(row=3, column=1, padx=10, pady=10, sticky='w')
         #8 11 14 17
         #+Stock Materia Prima
-        if((tipo=="administrador")|(tipo=="repositor")):
+        if((tipo=="administrador")|(tipo=="repositor")): #Verifica tipo de usuario
+            # Si es V, se crea un botón con el texto "VENTAS" y se realizan configuraciones y se le asigna una funcion a ejecutar
             self.botonRepo = bt(self.ventana3, text="COMPRAS        ", font=(self.fuente, 20), bg=self.backB, fg=self.fuenteB, command=self.abrirFormularioCompras)
-            self.botonRepo.grid(row=4, column=1, padx=10, pady=10, sticky='w')
+            self.botonRepo.grid(row=4, column=1, padx=10, pady=10, sticky='w') # Se ubica el botón
         #-Stock Materia Prima +StockProducto
-        if((tipo=="administrador")|(tipo=="productor")):
+        if((tipo=="administrador")|(tipo=="productor")): #Verifica tipo de usuario
+            # Si es V, se crea un botón "PRODUCCIÓN", se realiza configuraciones y se le asigna una funcion a ejecutar
             self.botonPro = bt(self.ventana3, text="PRODUCCIÓN        ", font=(self.fuente, 20), bg=self.backB, fg=self.fuenteB, command=self.abrirFormularioPro)
-            self.botonPro.grid(row=5, column=1, padx=10, pady=10, sticky='w')
+            self.botonPro.grid(row=5, column=1, padx=10, pady=10, sticky='w') # Se ubica el botón
         
-        if(tipo=="administrador"):
+        if(tipo=="administrador"): #Verifica tipo de usuario
+            # Si es V, se crean botones "RECURSOS HUMANOS" y "PLANIFICACIÓN (MP/P)", se realizacon configuraciones y se les asigna una función a ejecutar
             self.botonRH = bt(self.ventana3, text="RECURSOS HUMANOS  ", font=(self.fuente, 20), bg=self.backB, fg=self.fuenteB, command=self.abrirFormularioRH)
-            self.botonRH.grid(row=6, column=1, padx=10, pady=10, sticky='w')
+            self.botonRH.grid(row=6, column=1, padx=10, pady=10, sticky='w') # Se les da posición
 
             self.botonPlan = bt(self.ventana3, text="PLANIFICACIÓN (MP/P)  ", font=(self.fuente, 20), bg=self.backB, fg=self.fuenteB, command=self.abrirFormularioPlan)
             self.botonPlan.grid(row=7, column=1, padx=10, pady=10, sticky='w')
 
-        self.ventana3.mainloop()
+        self.ventana3.mainloop() # Inicia un bucle de la interfaz que hace que la ventana permanezca abierta
 
-    def abrirFormularioSesion(self):
-        self.ventana22.deiconify()
-        self.ventana3.destroy()
+    def abrirFormularioSesion(self): # Método que se encarga de abrir el formulario de sesión
+        self.ventana22.deiconify() # Hace visible la ventana 22
+        self.ventana3.destroy() # Destruye la ventana 3
         #self.ventana21.withdraw()
         #C:\\Users\\mdari\\Desktop\\Ing_Prog\\FrontEnd\\
         #subprocess.call(["python", "C:\\Users\\mdari\\Desktop\\Ing_Prog\\FrontEnd\\formularioInicio.py"])
 
-    def abrirFormularioCuenta(self):
-        self.ventana3.withdraw()
-        aplicacion30 = FormularioCuenta(self.ventana3, self.usuario)
+    def abrirFormularioCuenta(self): # Método que abre formulario de cuenta
+        self.ventana3.withdraw() # Retira visibilidad de la ventana 3
+        aplicacion30 = FormularioCuenta(self.ventana3, self.usuario) # Crea una instancia de FormularioCuenta pasando ventana 3 y el objeto usuario
 
-    def abrirFormularioVentas(self):
-        self.ventana3.withdraw()
-        aplicacion31 = FormularioVentas(self.ventana3, self.usuario)
+    def abrirFormularioVentas(self): # Abre formulario de ventas 
+        self.ventana3.withdraw() # Retira visibilidad de ventana 3
+        aplicacion31 = FormularioVentas(self.ventana3, self.usuario) # Crea una instancia de FormularioVentas pansado ventana 3 y objeto usuario
 
-    def abrirFormularioCompras(self):
-        self.ventana3.withdraw()
-        aplicacion32 = FormularioCompras(self.ventana3, self.usuario)
+    def abrirFormularioCompras(self): # Abre formulario de compras
+        self.ventana3.withdraw() #Retira visibilidad de ventana 3
+        aplicacion32 = FormularioCompras(self.ventana3, self.usuario) # Crea una instancia de FormularioCompras pasando ventana 3 y usuario como argumento
 
-    def abrirFormularioPro(self):
-        self.ventana3.withdraw()
-        aplicacion33 = FormularioProduccion(self.ventana3, self.usuario)
+    def abrirFormularioPro(self): # Abre formulario de producción
+        self.ventana3.withdraw() # Retira visibilidad de ventana 3
+        aplicacion33 = FormularioProduccion(self.ventana3, self.usuario) # Crea una instancia de FormularioProducción pasando ventana 3 y usuario
 
-    def abrirFormularioRH(self):
-        self.ventana3.withdraw()
-        aplicacion34 = FormularioRH(self.ventana3, self.usuario)
+    def abrirFormularioRH(self): # Abre formulario de RR.HH. 
+        self.ventana3.withdraw() # Retira la visibilidad de ventana 3
+        aplicacion34 = FormularioRH(self.ventana3, self.usuario) # Crea una instancia de FormularioRH pasando ventana 3 y usuario
 
-    def abrirFormularioPlan(self):
-        self.ventana3.withdraw()
-        aplicacion35 = FormularioPlan(self.ventana3, self.usuario)
+    def abrirFormularioPlan(self): # Abre formulario de planificación
+        self.ventana3.withdraw() # Retira la visibilidad de ventana 3
+        aplicacion35 = FormularioPlan(self.ventana3, self.usuario) # Crea una instancia de FormularioPlan pasando ventana 3 y usuario
 
         
         
