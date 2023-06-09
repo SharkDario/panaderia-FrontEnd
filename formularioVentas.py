@@ -51,9 +51,9 @@ Sizegrip: TSizegrip
 Treeview: Treeview
 """
 
-class FormularioVentas:
-    def __init__(self, ventana, usuario):
-        self.usuario = usuario
+class FormularioVentas: # Define la clase
+    def __init__(self, ventana, usuario): # Define el método de inicializacion de la clase
+        self.usuario = usuario # 
         self.tema = "itft1" #itft1 smog
         self.back = 'light blue'
         self.backB = 'LightSalmon1'
@@ -65,16 +65,16 @@ class FormularioVentas:
         self.ventana33.title("3.4 - VENTAS")
         self.ventana33.geometry("900x750")
         self.ventana33.geometry("+10+20")
-        self.listaPagos = ["EFECTIVO", "TARJETA DE CREDITO", "TARJETA DE DEBITO", "TRANSFERENCIA"]
+        self.listaPagos = ["EFECTIVO", "TARJETA DE CREDITO", "TARJETA DE DEBITO", "TRANSFERENCIA"] # Crea lista de opciones
         
-        
+        # Crea widget con título #VENTAS"
         self.labelSuperior = label(self.ventana33, text="VENTAS", font=(self.fuente, 30), fg=self.fuenteB, background=self.back)
-        self.labelSuperior.grid(row=0, column=1, padx=10, sticky='w')
+        self.labelSuperior.grid(row=0, column=1, padx=10, sticky='w') # Le da ubicación
         
-
+        # Se crea un botón, se configura y se especifica el comando a ejecutar cuando se clickea
         self.botonAtras = bt(self.ventana33, text="⬅️", font=(self.fuente, 20), bg=self.backB, fg=self.fuenteB, command=self.volverFormularioUsuario)
-        self.botonAtras.grid(row=0, column=0, padx=1, pady=1, sticky='w')
-        self.cuaderno1 = ttk.Notebook(self.ventana33)
+        self.botonAtras.grid(row=0, column=0, padx=1, pady=1, sticky='w') # Se ubica
+        self.cuaderno1 = ttk.Notebook(self.ventana33) 
 
         #print(self.ventana34.get_themes())
         self.style = ttk.Style(self.cuaderno1)
@@ -86,34 +86,37 @@ class FormularioVentas:
         #[ 'alt', 'scidpurple', 'scidpink', 
         #'default', 'scidblue', 'classic', 'xpnative', 
         #, 'scidgrey', 'scidsand', 'scidgreen', 'arc', 'vista', 'winnative']
-
-        self.registrarCliente()
+        # Llama métodos
+        self.registrarCliente() 
         self.clienteVerEliminar()
         self.factura()
         self.verFactura()
         self.producto()
         self.productoSM()
 
-        self.cuaderno1.grid(column=1, row=1, padx=10, pady=10)
-        self.ventana33.mainloop()
+        self.cuaderno1.grid(column=1, row=1, padx=10, pady=10) # Ubica el cuaderno
+        self.ventana33.mainloop() # Inicia el bucle para que la pantalla se muestre y responda hasta que se cierre
 
    
 
-    def volverFormularioUsuario(self):
+    def volverFormularioUsuario(self): #Define método que se encarga de volver la formulario anterior, restaurandolo y destruyendo la ventana actual
         self.ventana3.deiconify()
         self.ventana33.destroy()
 
-    def verFactura(self):
-        self.pagina6 = ttk.Frame(self.cuaderno1)
+    def verFactura(self): # Define método
+        self.pagina6 = ttk.Frame(self.cuaderno1) # Crea marco y lo asigna a la variable. Este marco es una pestaña del cuaderno
         #900x750
-        self.pagina6.config(width=800, height=750)
-        self.cuaderno1.add(self.pagina6, text="Información de Factura:")
+        self.pagina6.config(width=800, height=750) # Configuraciones
+        self.cuaderno1.add(self.pagina6, text="Información de Factura:") # Agrega el marco como pestaña al cuaderno 
         #self.listaNumF = []
+        # Crea un marco dentro de otro marco, que se utiliza como contenedos para organizar elementos relacionados a info de factura.
         self.labelframe6 = labelF(self.pagina6, text="Información de Factura:", font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
-        self.labelframe6.grid(column=0, row=0, padx=5, pady=10)
+        self.labelframe6.grid(column=0, row=0, padx=5, pady=10) # Ubicación
 
+        # Se crea una etiqueta dentro del marco, que muestra "Tipo de factura"
         self.labelTipoF = label(self.labelframe6, text='Tipo de factura:', font=(self.fuente, 20), fg=self.fuenteB, background=self.back)
-        self.labelTipoF.grid(column=0, row=1, padx=4, pady=4)
+        self.labelTipoF.grid(column=0, row=1, padx=4, pady=4) # Se ubica
+        # Se crea un cuadro 
         self.comboTipoF = ttk.Combobox(self.labelframe6, font=(self.fuente, 20), width = 15, values=["A", "B", "C"])
         # Adding combobox drop down list
         self.comboTipoF.set("A")
