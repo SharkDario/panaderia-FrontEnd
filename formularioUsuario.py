@@ -123,39 +123,3 @@ class FormularioUsuario: # Se define la clase
     def abrirFormularioPlan(self): # Abre formulario de planificación
         self.ventana3.withdraw() # Retira la visibilidad de ventana 3
         aplicacion35 = FormularioPlan(self.ventana3, self.usuario) # Crea una instancia de FormularioPlan pasando ventana 3 y usuario
-
-        
-        
-
-    
-
-        
-        #subprocess.call(["python", "formularioInicio.py"])
-
-
-
-#aplicacion1 = FormularioRegistro()
-
-"""
-from tkinter import Tk, Label
-from PIL import Image, ImageTk
-
-ventana = Tk()
-
-# Cargar la imagen
-imagen = Image.open("ruta_imagen")
-imagen_tk = ImageTk.PhotoImage(imagen)
-
-# Crear un Label con la imagen
-label_imagen = Label(ventana, image=imagen_tk)
-label_imagen.place(x=0, y=0, relwidth=1, relheight=1)
-
-# Agregar otros widgets encima del Label
-label_texto = Label(ventana, text="Texto")
-label_texto.pack()
-
-ventana.mainloop()
-
-
-
-"""
