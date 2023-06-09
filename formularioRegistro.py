@@ -20,9 +20,9 @@ from usuario import Usuario
 # tkinter.font.families() para ver las fuentes
 
 
-class FormularioRegistro:
-    def __init__(self, ventana):
-        self.tema = "black"
+class FormularioRegistro: # se define una clase que crea una ventana de formulario para el registro de adminstradores
+    def __init__(self, ventana): # constructor de la clase
+        self.tema = "black" # se inicializa varias variables
         self.ventana1 = ventana
         self.back = 'light blue'
         self.backB = 'LightSalmon1'
