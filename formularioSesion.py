@@ -70,42 +70,42 @@ class FormularioSesion:
         self.ventana22.mainloop()
 
     def abrirFormularioInicio(self):
-        self.ventana1.deiconify()
-        self.ventana22.destroy()
+        self.ventana1.deiconify() # Hace visible la ventana1 (formulario de inicio)
+        self.ventana22.destroy() # Destruye la ventana22 (formulario actual)
 
     def abrirFormularioUsuario(self, tipo):
-        self.ventana22.withdraw()
-        aplicacion3 = FormularioUsuario(self.ventana22, tipo)
+        self.ventana22.withdraw()   # Oculta la ventana22 (formulario actual)
+        aplicacion3 = FormularioUsuario(self.ventana22, tipo)   # Crea una instancia de FormularioUsuario con la ventana22 y el tipo de usuario especificado
 
     def iniciarSesionAdminEmple(self):
-        usuarios = Usuario.recuperarNombresUser()
-        #usuarios = usuarios[0]
-        user = self.entradaUser.get()
-        clave = f.ingClave(self.entradaClave.get(), self.entradaClave2.get())
-        entryValido = (type(clave) is not list)
-        mensaje=""
-        bandeIS = False
-        if(entryValido):
-            usuarioIng = Usuario.iniciarSesion(user, clave)
-            if(usuarioIng!=[]):
+        usuarios = Usuario.recuperarNombresUser()  # Recupera los nombres de usuario almacenados
+        #usuarios = usuarios[0] 
+        user = self.entradaUser.get() # Obtiene el valor ingresado en el campo de usuario
+        clave = f.ingClave(self.entradaClave.get(), self.entradaClave2.get())  # Obtiene y encripta la clave ingresada
+        entryValido = (type(clave) is not list) # Verifica si la clave ingresada es válida
+        mensaje=""  # Variable para almacenar mensajes de error
+        bandeIS = False   # Bandera para indicar si se inicia sesión correctamente
+        if(entryValido): # Si la clave ingresada es valida
+            usuarioIng = Usuario.iniciarSesion(user, clave) # Intenta iniciar sesión con el usuario y clave proporcionados
+            if(usuarioIng!=[]): #si la lista no esta vacia
                 #aqui volvemos a la lista de 1 tupla, en solo 1 tupla
-                usuarioIng = usuarioIng[0]
+                usuarioIng = usuarioIng[0]    # Selecciona la primera tupla de la lista
                 #print(usuarioIng)
-                tipo=usuarioIng[8]
+                tipo=usuarioIng[8] # Obtiene el tipo de usuario (Administrador o Empleado) 
                 if(tipo==1): #Administrador
-                    userOld = Administrador.obtenerAdmi(usuarioIng[1]) 
+                    userOld = Administrador.obtenerAdmi(usuarioIng[1])  # Obtiene los datos del administrador
                 else: #Empleado
-                    listDNI = Empleado.obtenerDNIs()
-                    userOld = Empleado.obtenerEmpleado(listDNI, (usuarioIng[1], ))
-                mb.showinfo("¡Felicidades!", f"Bienvenid@ {usuarioIng[3]}")
-                bandeIS=True
+                    listDNI = Empleado.obtenerDNIs()   # Obtiene la lista de DNIs de los empleados
+                    userOld = Empleado.obtenerEmpleado(listDNI, (usuarioIng[1], )) #Obtiene los datos del empleado
+                mb.showinfo("¡Felicidades!", f"Bienvenid@ {usuarioIng[3]}")  # Muestra un mensaje de bienvenida
+                bandeIS=True # Cambia la bandera a True para indicar inicio de sesión exitoso
             else:
                 mensaje += "\nUsuario y/o contraseña incorrectos."
-        self.entradaUser.delete(0, tk.END)
-        self.entradaClave.delete(0, tk.END)
-        self.entradaClave2.delete(0, tk.END)
+        self.entradaUser.delete(0, tk.END)   # Borra el contenido del campo de usuario
+        self.entradaClave.delete(0, tk.END)   # Borra el contenido del campo clave
+        self.entradaClave2.delete(0, tk.END)    # Borra el contenido del campo de confirmación de clave
         if(bandeIS):
-            #Aqui inicia sesion
+            #Aqui inicia sesion correctamente
             #if(tipo==1): #Administrador
             #    print("Abrir Formulario con todas las opciones")
                 #print(admiOld)
@@ -113,13 +113,13 @@ class FormularioSesion:
             #    print("Abrir Formulario con las opciones particulares del tipo de empleado")
             #directamente con userOld verificaremos que modulos puede usar en el formularioUsuario
             #utilizando un try except para ver si tiene el atributo idTipoEmpleado
-            self.abrirFormularioUsuario(userOld)
+            self.abrirFormularioUsuario(userOld)   # Abre el formulario de usuario con los datos del usuario logueado
         else:
-            if(type(clave) is list):
-                mensaje += "\n"+clave[0]
-            mb.showerror("Error", mensaje)
+            if(type(clave) is list): #si la clave esta en la lista
+                mensaje += "\n"+clave[0] # Agrega el mensaje de error relacionado a la clave
+            mb.showerror("Error", mensaje)   # Muestra un mensaje de error
             #self.entradaUser.delete(0, tk.END)
-            #self.entradaClave.delete(0, tk.END)
+            #self.entradaClave.delete(0, tk.EN D)
             #self.entradaClave2.delete(0, tk.END)
 
 #aplicacion1 = FormularioRegistro()
