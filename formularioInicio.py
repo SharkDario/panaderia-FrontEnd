@@ -16,8 +16,9 @@ from tkinter import scrolledtext as st
 from ttkthemes import ThemedTk
 
 # tkinter.font.families() para ver las fuentes
-#DarioDario7
-#pip install ttkthemes
+# DarioDario7 - Nombre de usuario y contraseña para ingresar como el administrador Dario Coronel
+# pip install ttkthemes - Para instalar temas especiales de tkinter
+# pip install matplotlib - Para instalar la libreria de matplotlib, para realizar el grafico en el formularioPlan de productos mas vendidos
 
 class FormularioInicio:
     def __init__(self):
