@@ -56,18 +56,18 @@ Treeview: Treeview
 
 class FormularioPlan: # Se iniciliza el FormularioPlan pasandole dos parametros, la ventana anterior, y el usuario que ha ingresado al sistema
     def __init__(self, ventana, usuario):
-        self.usuario = usuario
-        self.tema = "itft1" #itft1 smog
-        self.back = 'light blue'
-        self.backB = 'LightSalmon1'
-        self.fuenteB = 'gray20'
-        self.fuente =  'Franklin Gothic Demi Cond'
-        self.ventana3 = ventana
-        self.ventana36 = ThemedTk() #tk.Tk()
-        self.ventana36.configure(bg=self.back)
-        self.ventana36.title("3.6 - PLANIFICACIÓN (MP/P)")
-        self.ventana36.geometry("900x750")
-        self.ventana36.geometry("+10+20")
+        self.usuario = usuario #Almacena el usuario en la instancia de la clase
+        self.tema = "itft1" #itft1 smog   # Define el tema de la interfaz gráfica
+        self.back = 'light blue'   # Define el color de fondo de la interfaz
+        self.backB = 'LightSalmon1'  # Define el color de fondo de los botones
+        self.fuenteB = 'gray20'     # Define el color de fuente de los botones
+        self.fuente =  'Franklin Gothic Demi Cond'   # Define la fuente de texto utilizada
+        self.ventana3 = ventana  # Almacena la ventana anterior
+        self.ventana36 = ThemedTk() #tk.Tk()  # Crea una nueva ventana utilizando ThemedTk
+        self.ventana36.configure(bg=self.back)   # Configura el color de fondo de la nueva ventana
+        self.ventana36.title("3.6 - PLANIFICACIÓN (MP/P)")   # Asigna un título a la nueva ventana
+        self.ventana36.geometry("900x750")    # Define el tamaño de la nueva ventana
+        self.ventana36.geometry("+10+20")  # Define la posición de la nueva ventana en la pantalla
 
         
         
