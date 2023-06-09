@@ -48,9 +48,9 @@ Sizegrip: TSizegrip
 Treeview: Treeview
 """
 
-class FormularioCuenta:
-    def __init__(self, ventana, usuario):
-        self.usuario = usuario
+class FormularioCuenta: # define una clase que crea una ventana para la cuenta del usuario
+    def __init__(self, ventana, usuario): # construye clase y recibe dos parametros
+        self.usuario = usuario # inicializa diversas variables y les asigna valores específicos
         self.tema = "itft1" #itft1 smog
         self.back = 'light blue'
         self.backB = 'LightSalmon1'
@@ -58,7 +58,7 @@ class FormularioCuenta:
         self.fuente =  'Franklin Gothic Demi Cond'
         self.ventana3 = ventana
         self.ventana30 = ThemedTk() #tk.Tk()
-        self.ventana30.configure(bg=self.back)
+        self.ventana30.configure(bg=self.back) 
         self.ventana30.title("3.1 - CUENTA")
         self.ventana30.geometry("900x750")
         self.ventana30.geometry("+10+20")
@@ -66,7 +66,7 @@ class FormularioCuenta:
         
         
         self.labelSuperior = label(self.ventana30, text="CUENTA", font=(self.fuente, 30), fg=self.fuenteB, background=self.back)
-        self.labelSuperior.grid(row=0, column=1, padx=10, sticky='w')
+        self.labelSuperior.grid(row=0, column=1, padx=10, sticky='w') # 
         
 
         self.botonAtras = bt(self.ventana30, text="⬅️", font=(self.fuente, 20), bg=self.backB, fg=self.fuenteB, command=self.volverFormularioUsuario)
