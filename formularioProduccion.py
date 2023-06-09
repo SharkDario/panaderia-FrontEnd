@@ -247,11 +247,11 @@ class FormularioProduccion:
 
         self.labelSM = label(self.labelframe4, text="NOMBRE\t\tPRECIO UNITARIO\tSTOCK ACTUAL", font=(self.fuente, 15), fg=self.fuenteB, background=self.back)
         self.labelSM.grid(column=0, row=1, padx=4, pady=4)
-
+        #scrolledText  de los productos
         self.scrolledtextProN = st.ScrolledText(self.labelframe4, font=(self.fuente, 15), width=40, height=15)
         self.scrolledtextProN.grid(column=0, row=2, padx=5, pady=10)
 
-        #print(listaMateriaSM)
+        # se recorre cada producto de la lista producto
         for producto in listaProductoN:
             #producto = (nombre, descripcion, precioU, stock actual)
             self.scrolledtextProN.insert(tk.END, f"{producto[0]} ({producto[1]})\t\t  {producto[2]}\t\t{producto[3]}\n")
